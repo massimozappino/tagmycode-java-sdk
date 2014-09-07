@@ -4,11 +4,11 @@
     <parent>
         <groupId>com.tagmycode</groupId>
         <artifactId>tagmycode-sdk-container</artifactId>
-        <version>0.1.0</version>
+        <version>0.1.1-SNAPSHOT</version>
     </parent>
     <artifactId>tagmycode-sdk</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <name>TagMyCode Java SDK</name>
     <description>Java SDK for TagMyCode REST API</description>
     <url>http://tagmycode.com</url>
