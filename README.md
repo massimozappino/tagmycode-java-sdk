@@ -1,5 +1,7 @@
-# TagMyCode Java SDK
 [![Build Status](https://travis-ci.org/massimozappino/tagmycode-java-sdk.svg?branch=master)](https://travis-ci.org/massimozappino/tagmycode-java-sdk)
+
+# TagMyCode Java SDK
+A Java library to access [TagMyCode RESTful API](http://tagmycode.com).
 
 ## Examples
 
