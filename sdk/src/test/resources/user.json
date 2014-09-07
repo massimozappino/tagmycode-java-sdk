@@ -1,0 +1,12 @@
+{
+  "id":1,
+  "username":"my.username",
+  "firstname":"Name",
+  "lastname":"Surname",
+  "email":"myfake@email.not",
+  "locale":"en",
+  "timezone":"Europe\/Rome",
+  "registration_date":"2010-11-22T13:11:25Z",
+  "activation_date":"2010-11-22T13:11:25Z",
+  "status":"active"
+}

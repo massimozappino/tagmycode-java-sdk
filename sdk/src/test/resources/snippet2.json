@@ -1,0 +1,16 @@
+{
+  "id":"2",
+  "title":"My title2",
+  "language":{
+    "id":"2",
+    "name":"Xxx",
+    "code":"xxx"
+  },
+  "description":"A simple description2",
+  "code":"code2",
+  "tags":"tag1 tag2 tag3",
+  "is_private":false,
+  "url":"https:\/\/tagmycode.com\/snippet\/2",
+  "created_at":"2010-11-22T13:11:25Z",
+  "updated_at":"2010-11-22T13:11:25Z",
+}
