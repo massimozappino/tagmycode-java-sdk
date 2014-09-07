@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tagmycode</groupId>
     <artifactId>tagmycode-sdk-container</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.2-SNAPSHOT</version>
     <name>TagMyCode Java SDK parent</name>
     <description>Java SDK for TagMyCode REST API</description>
     <url>http://tagmycode.com</url>
@@ -18,8 +19,8 @@
         <connection>scm:git:git://github.com/massimozappino/tagmycode-java-sdk.git</connection>
         <developerConnection>scm:git:git@github.com:massimozappino/tagmycode-java-sdk.git</developerConnection>
         <url>https://github.com/massimozappino/tagmycode-java-sdk</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <licenses>
         <license>
@@ -73,48 +74,48 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-release-plugin</artifactId>-->
+            <!--<version>2.5</version>-->
+            <!--<configuration>-->
+            <!--<arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>-->
+            <!--</configuration>-->
+            <!--</plugin>-->
+
+
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5</version>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.2</version>
+                <extensions>true</extensions>
                 <configuration>
-                    <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
+
+
         </plugins>
     </build>
 
     <distributionManagement>
         <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus snapshot repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
-        <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>Sonatype Nexus release repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
     </distributionManagement>
 
     <profiles>
         <profile>
-            <id>release-sign-artifacts</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
+            <id>release</id>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>1.5</version>
-                        <configuration>
-                            <passphrase>${gpg.passphrase}</passphrase>
-                        </configuration>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -128,12 +129,12 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.3</version>
+                        <version>2.2.1</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
                                 <goals>
-                                    <goal>jar</goal>
+                                    <goal>jar-no-fork</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -148,12 +149,6 @@
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
-                                <configuration>
-                                    <includeDependencySources>true</includeDependencySources>
-                                    <dependencySourceExcludes>
-                                        <dependencySourceExclude>com.intellij:*</dependencySourceExclude>
-                                    </dependencySourceExcludes>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -161,4 +156,70 @@
             </build>
         </profile>
     </profiles>
+
+    <!--<profiles>-->
+    <!--<profile>-->
+    <!--<id>release-sign-artifacts</id>-->
+    <!--<activation>-->
+    <!--<property>-->
+    <!--<name>performRelease</name>-->
+    <!--<value>true</value>-->
+    <!--</property>-->
+    <!--</activation>-->
+    <!--<build>-->
+    <!--<plugins>-->
+
+    <!--<plugin>-->
+    <!--<groupId>org.apache.maven.plugins</groupId>-->
+    <!--<artifactId>maven-gpg-plugin</artifactId>-->
+    <!--<version>1.5</version>-->
+    <!--<configuration>-->
+    <!--<passphrase>${gpg.passphrase}</passphrase>-->
+    <!--</configuration>-->
+    <!--<executions>-->
+    <!--<execution>-->
+    <!--<id>sign-artifacts</id>-->
+    <!--<phase>verify</phase>-->
+    <!--<goals>-->
+    <!--<goal>sign</goal>-->
+    <!--</goals>-->
+    <!--</execution>-->
+    <!--</executions>-->
+    <!--</plugin>-->
+    <!--<plugin>-->
+    <!--<groupId>org.apache.maven.plugins</groupId>-->
+    <!--<artifactId>maven-source-plugin</artifactId>-->
+    <!--<version>2.3</version>-->
+    <!--<executions>-->
+    <!--<execution>-->
+    <!--<id>attach-sources</id>-->
+    <!--<goals>-->
+    <!--<goal>jar</goal>-->
+    <!--</goals>-->
+    <!--</execution>-->
+    <!--</executions>-->
+    <!--</plugin>-->
+    <!--<plugin>-->
+    <!--<groupId>org.apache.maven.plugins</groupId>-->
+    <!--<artifactId>maven-javadoc-plugin</artifactId>-->
+    <!--<version>2.9.1</version>-->
+    <!--<executions>-->
+    <!--<execution>-->
+    <!--<id>attach-javadocs</id>-->
+    <!--<goals>-->
+    <!--<goal>jar</goal>-->
+    <!--</goals>-->
+    <!--<configuration>-->
+    <!--<includeDependencySources>true</includeDependencySources>-->
+    <!--<dependencySourceExcludes>-->
+    <!--<dependencySourceExclude>com.intellij:*</dependencySourceExclude>-->
+    <!--</dependencySourceExcludes>-->
+    <!--</configuration>-->
+    <!--</execution>-->
+    <!--</executions>-->
+    <!--</plugin>-->
+    <!--</plugins>-->
+    <!--</build>-->
+    <!--</profile>-->
+    <!--</profiles>-->
 </project>
