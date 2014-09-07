@@ -148,6 +148,12 @@
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
+                                <configuration>
+                                    <includeDependencySources>true</includeDependencySources>
+                                    <dependencySourceExcludes>
+                                        <dependencySourceExclude>com.intellij:*</dependencySourceExclude>
+                                    </dependencySourceExcludes>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
