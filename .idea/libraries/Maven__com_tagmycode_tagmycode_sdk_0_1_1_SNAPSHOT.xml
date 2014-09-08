@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.tagmycode:tagmycode-sdk:0.1.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/sdk/pom.xml!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/sdk/tagmycode-sdk-0.1.1-SNAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/sdk/tagmycode-sdk-0.1.1-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -2,18 +2,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tagmycode</groupId>
-    <artifactId>tagmycode-sdk-container</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>tagmycode-sdk</artifactId>
+    <packaging>jar</packaging>
     <version>0.1.2-SNAPSHOT</version>
-    <name>TagMyCode Java SDK parent</name>
+    <name>TagMyCode Java SDK</name>
     <description>Java SDK for TagMyCode REST API</description>
     <url>http://tagmycode.com</url>
-
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
 
     <scm>
         <connection>scm:git:git://github.com/massimozappino/tagmycode-java-sdk.git</connection>
@@ -44,11 +38,6 @@
         <skipTests>false</skipTests>
     </properties>
 
-    <modules>
-        <module>sdk</module>
-        <module>plugin</module>
-    </modules>
-
     <build>
         <defaultGoal>package</defaultGoal>
 
@@ -74,15 +63,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-release-plugin</artifactId>-->
-            <!--<version>2.5</version>-->
-            <!--<configuration>-->
-            <!--<arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
-
 
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
@@ -157,69 +137,36 @@
         </profile>
     </profiles>
 
-    <!--<profiles>-->
-    <!--<profile>-->
-    <!--<id>release-sign-artifacts</id>-->
-    <!--<activation>-->
-    <!--<property>-->
-    <!--<name>performRelease</name>-->
-    <!--<value>true</value>-->
-    <!--</property>-->
-    <!--</activation>-->
-    <!--<build>-->
-    <!--<plugins>-->
-
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-gpg-plugin</artifactId>-->
-    <!--<version>1.5</version>-->
-    <!--<configuration>-->
-    <!--<passphrase>${gpg.passphrase}</passphrase>-->
-    <!--</configuration>-->
-    <!--<executions>-->
-    <!--<execution>-->
-    <!--<id>sign-artifacts</id>-->
-    <!--<phase>verify</phase>-->
-    <!--<goals>-->
-    <!--<goal>sign</goal>-->
-    <!--</goals>-->
-    <!--</execution>-->
-    <!--</executions>-->
-    <!--</plugin>-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-source-plugin</artifactId>-->
-    <!--<version>2.3</version>-->
-    <!--<executions>-->
-    <!--<execution>-->
-    <!--<id>attach-sources</id>-->
-    <!--<goals>-->
-    <!--<goal>jar</goal>-->
-    <!--</goals>-->
-    <!--</execution>-->
-    <!--</executions>-->
-    <!--</plugin>-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-javadoc-plugin</artifactId>-->
-    <!--<version>2.9.1</version>-->
-    <!--<executions>-->
-    <!--<execution>-->
-    <!--<id>attach-javadocs</id>-->
-    <!--<goals>-->
-    <!--<goal>jar</goal>-->
-    <!--</goals>-->
-    <!--<configuration>-->
-    <!--<includeDependencySources>true</includeDependencySources>-->
-    <!--<dependencySourceExcludes>-->
-    <!--<dependencySourceExclude>com.intellij:*</dependencySourceExclude>-->
-    <!--</dependencySourceExcludes>-->
-    <!--</configuration>-->
-    <!--</execution>-->
-    <!--</executions>-->
-    <!--</plugin>-->
-    <!--</plugins>-->
-    <!--</build>-->
-    <!--</profile>-->
-    <!--</profiles>-->
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scribe</groupId>
+            <artifactId>scribe</artifactId>
+            <version>1.3.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20080701</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>1.43</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+        </dependency>
+    </dependencies>
 </project>

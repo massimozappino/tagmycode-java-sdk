@@ -22,9 +22,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="plugin" />
         <module name="pluginSkeleton" />
-        <module name="sdk" />
+        <module name="tagmycode-java-sdk" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
