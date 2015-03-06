@@ -29,6 +29,22 @@ public class ClientTest extends ClientBaseTest {
     }
 
     @Test
+    public void constructorWithSecretObject() {
+        Client clientSimple = new Client(new AbstractSecret() {
+            @Override
+            public String getConsumerId() {
+                return "consumer_id";
+            }
+
+            @Override
+            public String getConsumerSecret() {
+                return "consumer_secret";
+            }
+        });
+        assertTrue(clientSimple.getAuthorizationUrl().contains("https://tagmycode.com/oauth2/authorize"));
+    }
+
+    @Test
     public void emptyOauthToken() {
         client.setOauthToken(new OauthToken("", ""));
         assertFalse(client.isAuthenticated());

@@ -21,10 +21,6 @@ public class Client {
     private OauthToken oauthToken;
     public String endpointUrl;
 
-    public Client(String key, String secret) {
-        this(new TagMyCodeApiProduction(), key, secret);
-    }
-
     public Client(TagMyCodeApi tagmycodeApi, String key, String secret) {
         if (tagmycodeApi.isSsl()) {
             new Ssl().disableSslVerification();
@@ -36,6 +32,14 @@ public class Client {
                 .apiSecret(secret)
                 .build();
         endpointUrl = tagmycodeApi.getEndpointUrl();
+    }
+
+    public Client(String key, String secret) {
+        this(new TagMyCodeApiProduction(), key, secret);
+    }
+
+    public Client(AbstractSecret secret) {
+        this(secret.getConsumerId(), secret.getConsumerSecret());
     }
 
     public void fetchOauthToken(String verificationCode) throws TagMyCodeConnectionException {
