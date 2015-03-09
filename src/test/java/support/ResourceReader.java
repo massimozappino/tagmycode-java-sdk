@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 
-public class JsonResourceReader {
+public class ResourceReader {
 
     public String readFile(String filename) throws IOException {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);

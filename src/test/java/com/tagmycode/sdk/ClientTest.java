@@ -170,7 +170,7 @@ public class ClientTest extends ClientBaseTest {
         Client clientSpy = Mockito.spy(client);
         clientSpy.setOauthToken(new OauthToken("123", "456"));
         try {
-            new TagMyCode(clientSpy).getAccount();
+            new TagMyCode(clientSpy).fetchAccount();
             fail("Expected exception");
         } catch (TagMyCodeUnauthorizedException ignore) {
         }
@@ -194,7 +194,7 @@ public class ClientTest extends ClientBaseTest {
                         .withBody("{}"
                         )));
         try {
-            new TagMyCode(client).getAccount();
+            new TagMyCode(client).fetchAccount();
             fail("Expected exception");
         } catch (TagMyCodeException e) {
             assertTrue(e instanceof TagMyCodeUnauthorizedException);

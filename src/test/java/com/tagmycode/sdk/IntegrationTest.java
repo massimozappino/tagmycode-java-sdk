@@ -6,7 +6,6 @@ import com.tagmycode.sdk.authentication.TagMyCodeApiProduction;
 import com.tagmycode.sdk.model.LanguageCollection;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class IntegrationTest {
@@ -16,7 +15,7 @@ public class IntegrationTest {
         Client client = new Client(new TagMyCodeApiProduction(), "123", "456");
         client.setOauthToken(new OauthToken("123", "456"));
 
-        LanguageCollection languages = new TagMyCode(client).getLanguages();
+        LanguageCollection languages = new TagMyCode(client).fetchLanguages();
         assertTrue(languages.size() > 0);
     }
 

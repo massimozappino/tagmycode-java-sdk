@@ -9,18 +9,18 @@ import org.json.JSONException;
 import org.scribe.model.Verb;
 
 public class TagMyCode {
-    private Client client;
+    private final Client client;
 
     public TagMyCode(Client client) {
         this.client = client;
     }
 
-    public User getAccount() throws TagMyCodeException {
+    public User fetchAccount() throws TagMyCodeException {
         ClientResponse cr = client.sendRequest("account", Verb.GET);
         return new User(cr.getBody());
     }
 
-    public LanguageCollection getLanguages() throws TagMyCodeException {
+    public LanguageCollection fetchLanguages() throws TagMyCodeException {
         ClientResponse cr = client.sendRequest("languages", Verb.GET);
         LanguageCollection languages = new LanguageCollection();
 
@@ -79,12 +79,17 @@ public class TagMyCode {
         return collection;
     }
 
-    public Snippet getSnippet(int snippetId) throws TagMyCodeException {
+    public Snippet fetchSnippet(int snippetId) throws TagMyCodeException {
         ClientResponse cr = client.sendRequest("snippets/" + snippetId, Verb.GET);
         return new Snippet(cr.getBody());
     }
 
     public void deleteSnippet(int snippetId) throws TagMyCodeException {
         client.sendRequest("snippets/" + snippetId, Verb.DELETE);
+    }
+
+    public Client getClient()
+    {
+        return client;
     }
 }
