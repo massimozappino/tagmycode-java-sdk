@@ -51,7 +51,6 @@ public class TagMyCode {
         return new Snippet(cr.getBody());
     }
 
-
     public ParamList prepareSnippetParamList(Snippet snippet) {
         return new ParamList()
                 .add("language_id", snippet.getLanguage().getId())
@@ -61,7 +60,6 @@ public class TagMyCode {
                 .add("tags", snippet.getTags())
                 .add("is_private", snippet.isPrivate());
     }
-
 
     public ModelCollection<Snippet> createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
         ModelCollection<Snippet> collection;

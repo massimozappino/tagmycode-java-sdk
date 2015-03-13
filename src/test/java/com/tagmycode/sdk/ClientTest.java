@@ -2,6 +2,7 @@ package com.tagmycode.sdk;
 
 
 import com.tagmycode.sdk.authentication.OauthToken;
+import com.tagmycode.sdk.authentication.VoidOauthToken;
 import com.tagmycode.sdk.exception.TagMyCodeApiException;
 import com.tagmycode.sdk.exception.TagMyCodeConnectionException;
 import com.tagmycode.sdk.exception.TagMyCodeException;
@@ -26,6 +27,20 @@ public class ClientTest extends ClientBaseTest {
     public void simpleConstructorIsForProduction() {
         Client clientSimple = new Client("consumer_id", "consumer_secret");
         assertTrue(clientSimple.getAuthorizationUrl().contains("https://tagmycode.com/oauth2/authorize"));
+    }
+
+    @Test
+    public void newClientHasAlwaysOauthToken() throws Exception {
+        stubFor(get(urlMatching("/fake_request.*"))
+                .willReturn(aResponse().withStatus(200)));
+        Client newClient = new Client(new TagMyCodeApiStub(), "123", "456");
+        try {
+            newClient.sendRequest("fake_request", Verb.GET);
+        } catch (NullPointerException e) {
+            fail("Expected a valid OauthToken");
+        }
+        OauthToken oauthToken = newClient.getOauthToken();
+        assertTrue("void object OauthToken", oauthToken instanceof VoidOauthToken);
     }
 
     @Test

@@ -1,9 +1,6 @@
 package com.tagmycode.sdk;
 
-import com.tagmycode.sdk.authentication.OauthToken;
-import com.tagmycode.sdk.authentication.TagMyCodeApi;
-import com.tagmycode.sdk.authentication.TagMyCodeApiProduction;
-import com.tagmycode.sdk.authentication.TagMyCodeServiceImpl;
+import com.tagmycode.sdk.authentication.*;
 import com.tagmycode.sdk.exception.TagMyCodeApiException;
 import com.tagmycode.sdk.exception.TagMyCodeConnectionException;
 import com.tagmycode.sdk.exception.TagMyCodeUnauthorizedException;
@@ -32,6 +29,7 @@ public class Client {
                 .apiSecret(secret)
                 .build();
         endpointUrl = tagmycodeApi.getEndpointUrl();
+        oauthToken = new VoidOauthToken();
     }
 
     public Client(String key, String secret) {
