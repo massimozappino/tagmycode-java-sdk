@@ -75,6 +75,7 @@ public class Client {
 
     private boolean isTokenValid(OauthToken token) {
         return (token != null)
+                && !(token instanceof VoidOauthToken)
                 && ((token.getAccessToken().getToken().length() != 0) || (token.getRefreshToken().getToken().length() != 0));
     }
 
@@ -131,7 +132,7 @@ public class Client {
     }
 
     public boolean isAuthenticated() {
-        return getOauthToken() != null;
+        return isTokenValid(getOauthToken());
     }
 
     public void revokeAccess() {

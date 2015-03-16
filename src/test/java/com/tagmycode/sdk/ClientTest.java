@@ -113,6 +113,13 @@ public class ClientTest extends ClientBaseTest {
     }
 
     @Test
+    public void defaultAccessTokenIsNotAuthenticated() {
+        Client defaultClient = new Client(new TagMyCodeApiStub(), "key", "secret");
+
+        assertFalse(defaultClient.isAuthenticated());
+    }
+
+    @Test
     public void voidAccessTokenIsNotAuthenticated() {
         client.setOauthToken(new OauthToken("", ""));
         assertFalse(client.isAuthenticated());
