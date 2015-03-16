@@ -70,7 +70,7 @@ public class ClientTest extends ClientBaseTest {
         client.setOauthToken(new OauthToken("1", "2"));
         assertNotNull(client.getOauthToken());
         client.revokeAccess();
-        assertNull(client.getOauthToken());
+        assertTrue(client.getOauthToken() instanceof VoidOauthToken);
     }
 
     @Test
@@ -123,6 +123,12 @@ public class ClientTest extends ClientBaseTest {
     public void voidAccessTokenIsNotAuthenticated() {
         client.setOauthToken(new OauthToken("", ""));
         assertFalse(client.isAuthenticated());
+    }
+
+    @Test
+    public void nullOauthTokenIsVoidOauthTokenInstance(){
+        client.setOauthToken(null);
+        assertTrue(client.getOauthToken() instanceof VoidOauthToken);
     }
 
     @Test

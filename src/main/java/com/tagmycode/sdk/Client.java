@@ -65,7 +65,7 @@ public class Client {
         if (isTokenValid(token)) {
             this.oauthToken = token;
         } else {
-            this.oauthToken = null;
+            this.oauthToken = new VoidOauthToken();
         }
     }
 
