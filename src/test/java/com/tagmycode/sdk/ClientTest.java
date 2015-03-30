@@ -15,6 +15,9 @@ import support.TagMyCodeApiStub;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 
 public class ClientTest extends ClientBaseTest {
 
@@ -195,7 +198,7 @@ public class ClientTest extends ClientBaseTest {
                         .withHeader("Content-Type", "text/plain")
                         .withBody(createStringResponseForToken("abc", "xyz")
                         )));
-        Client clientSpy = Mockito.spy(client);
+        Client clientSpy = spy(client);
         clientSpy.setOauthToken(new OauthToken("123", "456"));
         try {
             new TagMyCode(clientSpy).fetchAccount();
@@ -227,6 +230,28 @@ public class ClientTest extends ClientBaseTest {
         } catch (TagMyCodeException e) {
             assertTrue(e instanceof TagMyCodeUnauthorizedException);
         }
+    }
+
+
+    @Test
+    public void walletInvokedOnSetOauthToken() {
+        Client clientSpy = spy(client);
+        IWallet walletMock = mock(IWallet.class);
+        clientSpy.setWallet(walletMock);
+        OauthToken oauthToken = new OauthToken("123456", "123456");
+        clientSpy.setOauthToken(oauthToken);
+
+        Mockito.verify(walletMock, times(1)).saveOauthToken(oauthToken);
+    }
+
+    @Test
+    public void walletNotInvokedWithNullOauthToken() {
+        Client clientSpy = spy(client);
+        IWallet walletMock = mock(IWallet.class);
+        clientSpy.setWallet(walletMock);
+        clientSpy.setOauthToken(null);
+
+        Mockito.verify(walletMock, times(0)).saveOauthToken(null);
     }
 
     protected void createStubForOauth(String accessTokenString, String refreshTokenString) {
