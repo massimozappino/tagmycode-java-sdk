@@ -8,14 +8,14 @@ import java.io.IOException;
 
 public class ResourceGenerate {
 
-    private JsonResourceReader resourceReader;
+    private ResourceReader resourceReader;
 
-    public JsonResourceReader getResourceReader() {
+    public ResourceReader getResourceReader() {
         return resourceReader;
     }
 
     public ResourceGenerate() {
-        resourceReader = new JsonResourceReader();
+        resourceReader = new ResourceReader();
     }
 
     public Snippet aSnippet() throws IOException, TagMyCodeJsonException {

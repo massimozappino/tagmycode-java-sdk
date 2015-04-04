@@ -105,7 +105,7 @@ public class Snippet extends ModelAbstract {
     }
 
     public Language getLanguage() {
-        return language;
+        return null == language ? new DefaultLanguage() : language;
     }
 
     public Snippet setLanguage(Language language) {

@@ -9,18 +9,23 @@ import org.json.JSONException;
 import org.scribe.model.Verb;
 
 public class TagMyCode {
-    private Client client;
+    private final Client client;
 
     public TagMyCode(Client client) {
         this.client = client;
     }
 
-    public User getAccount() throws TagMyCodeException {
+    public Client getClient()
+    {
+        return client;
+    }
+
+    public User fetchAccount() throws TagMyCodeException {
         ClientResponse cr = client.sendRequest("account", Verb.GET);
         return new User(cr.getBody());
     }
 
-    public LanguageCollection getLanguages() throws TagMyCodeException {
+    public LanguageCollection fetchLanguages() throws TagMyCodeException {
         ClientResponse cr = client.sendRequest("languages", Verb.GET);
         LanguageCollection languages = new LanguageCollection();
 
@@ -51,8 +56,16 @@ public class TagMyCode {
         return new Snippet(cr.getBody());
     }
 
+    public Snippet fetchSnippet(int snippetId) throws TagMyCodeException {
+        ClientResponse cr = client.sendRequest("snippets/" + snippetId, Verb.GET);
+        return new Snippet(cr.getBody());
+    }
 
-    public ParamList prepareSnippetParamList(Snippet snippet) {
+    public void deleteSnippet(int snippetId) throws TagMyCodeException {
+        client.sendRequest("snippets/" + snippetId, Verb.DELETE);
+    }
+
+    protected ParamList prepareSnippetParamList(Snippet snippet) {
         return new ParamList()
                 .add("language_id", snippet.getLanguage().getId())
                 .add("title", snippet.getTitle())
@@ -62,8 +75,7 @@ public class TagMyCode {
                 .add("is_private", snippet.isPrivate());
     }
 
-
-    public ModelCollection<Snippet> createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
+    protected ModelCollection<Snippet> createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
         ModelCollection<Snippet> collection;
 
         collection = new ModelCollection<Snippet>();
@@ -77,14 +89,5 @@ public class TagMyCode {
             throw new TagMyCodeJsonException(e);
         }
         return collection;
-    }
-
-    public Snippet getSnippet(int snippetId) throws TagMyCodeException {
-        ClientResponse cr = client.sendRequest("snippets/" + snippetId, Verb.GET);
-        return new Snippet(cr.getBody());
-    }
-
-    public void deleteSnippet(int snippetId) throws TagMyCodeException {
-        client.sendRequest("snippets/" + snippetId, Verb.DELETE);
     }
 }

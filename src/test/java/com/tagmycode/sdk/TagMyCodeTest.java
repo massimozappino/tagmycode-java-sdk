@@ -19,19 +19,24 @@ public class TagMyCodeTest extends ClientBaseTest {
     }
 
     @Test
-    public void getAccount() throws Exception {
+    public void getClient() throws Exception {
+        assertEquals(client, tagMyCode.getClient());
+    }
+
+    @Test
+    public void fetchAccount() throws Exception {
         stubFor(get(urlMatching("/account.*"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody(resourceGenerate.anUser().toJson())));
 
-        User user = tagMyCode.getAccount();
+        User user = tagMyCode.fetchAccount();
         assertEquals(resourceGenerate.anUser(), user);
     }
 
     @Test
-    public void getLanguages() throws Exception {
+    public void fetchLanguages() throws Exception {
         stubFor(get(urlMatching("/languages.*"))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -40,7 +45,7 @@ public class TagMyCodeTest extends ClientBaseTest {
                         )));
 
 
-        LanguageCollection languages = tagMyCode.getLanguages();
+        LanguageCollection languages = tagMyCode.fetchLanguages();
         Language language = languages.get(0);
         assertEquals(resourceGenerate.aLanguage(), language);
     }
@@ -61,14 +66,14 @@ public class TagMyCodeTest extends ClientBaseTest {
     }
 
     @Test
-    public void getSnippet() throws Exception {
+    public void fetchSnippet() throws Exception {
         stubFor(get(urlMatching("/snippets.*"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody(resourceGenerate.aSnippet().toJson()
                         )));
-        Snippet snippet = tagMyCode.getSnippet(1);
+        Snippet snippet = tagMyCode.fetchSnippet(1);
 
         assertEquals(resourceGenerate.aSnippet(), snippet);
     }
@@ -76,7 +81,7 @@ public class TagMyCodeTest extends ClientBaseTest {
     @Test
     public void notFoundSnippetCatch404Error() throws TagMyCodeException {
         try {
-            tagMyCode.getSnippet(8888888);
+            tagMyCode.fetchSnippet(8888888);
             fail("Expected exception");
         } catch (TagMyCodeApiException e) {
             assertEquals(404, e.getHttpStatusCode());

@@ -2,6 +2,7 @@ package com.tagmycode.sdk;
 
 
 import com.tagmycode.sdk.authentication.OauthToken;
+import com.tagmycode.sdk.authentication.VoidOauthToken;
 import com.tagmycode.sdk.exception.TagMyCodeApiException;
 import com.tagmycode.sdk.exception.TagMyCodeConnectionException;
 import com.tagmycode.sdk.exception.TagMyCodeException;
@@ -14,6 +15,9 @@ import support.TagMyCodeApiStub;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 
 public class ClientTest extends ClientBaseTest {
 
@@ -29,6 +33,36 @@ public class ClientTest extends ClientBaseTest {
     }
 
     @Test
+    public void newClientHasAlwaysOauthToken() throws Exception {
+        stubFor(get(urlMatching("/fake_request.*"))
+                .willReturn(aResponse().withStatus(200)));
+        Client newClient = new Client(new TagMyCodeApiStub(), "123", "456");
+        try {
+            newClient.sendRequest("fake_request", Verb.GET);
+        } catch (NullPointerException e) {
+            fail("Expected a valid OauthToken");
+        }
+        OauthToken oauthToken = newClient.getOauthToken();
+        assertTrue("void object OauthToken", oauthToken instanceof VoidOauthToken);
+    }
+
+    @Test
+    public void constructorWithSecretObject() {
+        Client clientSimple = new Client(new AbstractSecret() {
+            @Override
+            public String getConsumerId() {
+                return "consumer_id";
+            }
+
+            @Override
+            public String getConsumerSecret() {
+                return "consumer_secret";
+            }
+        });
+        assertTrue(clientSimple.getAuthorizationUrl().contains("https://tagmycode.com/oauth2/authorize"));
+    }
+
+    @Test
     public void emptyOauthToken() {
         client.setOauthToken(new OauthToken("", ""));
         assertFalse(client.isAuthenticated());
@@ -39,7 +73,7 @@ public class ClientTest extends ClientBaseTest {
         client.setOauthToken(new OauthToken("1", "2"));
         assertNotNull(client.getOauthToken());
         client.revokeAccess();
-        assertNull(client.getOauthToken());
+        assertTrue(client.getOauthToken() instanceof VoidOauthToken);
     }
 
     @Test
@@ -82,9 +116,22 @@ public class ClientTest extends ClientBaseTest {
     }
 
     @Test
+    public void defaultAccessTokenIsNotAuthenticated() {
+        Client defaultClient = new Client(new TagMyCodeApiStub(), "key", "secret");
+
+        assertFalse(defaultClient.isAuthenticated());
+    }
+
+    @Test
     public void voidAccessTokenIsNotAuthenticated() {
         client.setOauthToken(new OauthToken("", ""));
         assertFalse(client.isAuthenticated());
+    }
+
+    @Test
+    public void nullOauthTokenIsVoidOauthTokenInstance(){
+        client.setOauthToken(null);
+        assertTrue(client.getOauthToken() instanceof VoidOauthToken);
     }
 
     @Test
@@ -151,10 +198,10 @@ public class ClientTest extends ClientBaseTest {
                         .withHeader("Content-Type", "text/plain")
                         .withBody(createStringResponseForToken("abc", "xyz")
                         )));
-        Client clientSpy = Mockito.spy(client);
+        Client clientSpy = spy(client);
         clientSpy.setOauthToken(new OauthToken("123", "456"));
         try {
-            new TagMyCode(clientSpy).getAccount();
+            new TagMyCode(clientSpy).fetchAccount();
             fail("Expected exception");
         } catch (TagMyCodeUnauthorizedException ignore) {
         }
@@ -178,11 +225,33 @@ public class ClientTest extends ClientBaseTest {
                         .withBody("{}"
                         )));
         try {
-            new TagMyCode(client).getAccount();
+            new TagMyCode(client).fetchAccount();
             fail("Expected exception");
         } catch (TagMyCodeException e) {
             assertTrue(e instanceof TagMyCodeUnauthorizedException);
         }
+    }
+
+
+    @Test
+    public void walletInvokedOnSetOauthToken() {
+        Client clientSpy = spy(client);
+        IWallet walletMock = mock(IWallet.class);
+        clientSpy.setWallet(walletMock);
+        OauthToken oauthToken = new OauthToken("123456", "123456");
+        clientSpy.setOauthToken(oauthToken);
+
+        Mockito.verify(walletMock, times(1)).saveOauthToken(oauthToken);
+    }
+
+    @Test
+    public void walletNotInvokedWithNullOauthToken() {
+        Client clientSpy = spy(client);
+        IWallet walletMock = mock(IWallet.class);
+        clientSpy.setWallet(walletMock);
+        clientSpy.setOauthToken(null);
+
+        Mockito.verify(walletMock, times(0)).saveOauthToken(null);
     }
 
     protected void createStubForOauth(String accessTokenString, String refreshTokenString) {

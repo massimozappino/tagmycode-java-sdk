@@ -1,9 +1,6 @@
 package com.tagmycode.sdk;
 
-import com.tagmycode.sdk.authentication.OauthToken;
-import com.tagmycode.sdk.authentication.TagMyCodeApi;
-import com.tagmycode.sdk.authentication.TagMyCodeApiProduction;
-import com.tagmycode.sdk.authentication.TagMyCodeServiceImpl;
+import com.tagmycode.sdk.authentication.*;
 import com.tagmycode.sdk.exception.TagMyCodeApiException;
 import com.tagmycode.sdk.exception.TagMyCodeConnectionException;
 import com.tagmycode.sdk.exception.TagMyCodeUnauthorizedException;
@@ -20,10 +17,7 @@ public class Client {
     private TagMyCodeServiceImpl service;
     private OauthToken oauthToken;
     public String endpointUrl;
-
-    public Client(String key, String secret) {
-        this(new TagMyCodeApiProduction(), key, secret);
-    }
+    private IWallet wallet;
 
     public Client(TagMyCodeApi tagmycodeApi, String key, String secret) {
         if (tagmycodeApi.isSsl()) {
@@ -36,12 +30,29 @@ public class Client {
                 .apiSecret(secret)
                 .build();
         endpointUrl = tagmycodeApi.getEndpointUrl();
+        setOauthToken(null);
+        setWallet(null);
+    }
+
+    public void setWallet(IWallet wallet) {
+        if (null == wallet) {
+            wallet = new VoidWallet();
+        }
+        this.wallet = wallet;
+    }
+
+    public Client(String key, String secret) {
+        this(new TagMyCodeApiProduction(), key, secret);
+    }
+
+    public Client(AbstractSecret secret) {
+        this(secret.getConsumerId(), secret.getConsumerSecret());
     }
 
     public void fetchOauthToken(String verificationCode) throws TagMyCodeConnectionException {
         Verifier verifier = new Verifier(verificationCode);
         try {
-            oauthToken = service.getOauthToken(verifier);
+            setOauthToken(service.getOauthToken(verifier));
         } catch (OAuthException e) {
             throw new TagMyCodeConnectionException(e);
         }
@@ -49,7 +60,7 @@ public class Client {
 
     public void refreshOauthToken() throws TagMyCodeUnauthorizedException {
         try {
-            oauthToken = service.getAccessTokenFromRefreshToken(oauthToken.getRefreshToken());
+            setOauthToken(service.getAccessTokenFromRefreshToken(oauthToken.getRefreshToken()));
         } catch (OAuthException e) {
             throw new TagMyCodeUnauthorizedException();
         }
@@ -59,11 +70,12 @@ public class Client {
         return service.getAuthorizationUrl(null);
     }
 
-    public void setOauthToken(OauthToken token) {
-        if (isTokenValid(token)) {
-            this.oauthToken = token;
+    public void setOauthToken(OauthToken oauthToken) {
+        if (isTokenValid(oauthToken)) {
+            wallet.saveOauthToken(oauthToken);
+            this.oauthToken = oauthToken;
         } else {
-            this.oauthToken = null;
+            this.oauthToken = new VoidOauthToken();
         }
     }
 
@@ -73,6 +85,7 @@ public class Client {
 
     private boolean isTokenValid(OauthToken token) {
         return (token != null)
+                && !(token instanceof VoidOauthToken)
                 && ((token.getAccessToken().getToken().length() != 0) || (token.getRefreshToken().getToken().length() != 0));
     }
 
@@ -129,7 +142,7 @@ public class Client {
     }
 
     public boolean isAuthenticated() {
-        return getOauthToken() != null;
+        return isTokenValid(getOauthToken());
     }
 
     public void revokeAccess() {

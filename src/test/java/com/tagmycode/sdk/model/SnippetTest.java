@@ -82,6 +82,14 @@ public class SnippetTest extends ModelAbstractBaseTest {
         assertFalse(snippet1.equals(snippet2));
     }
 
+
+    @Test
+    public void newSnippetWithNoLanguage() throws IOException, TagMyCodeJsonException {
+        Snippet snippet = new Snippet();
+
+        assertTrue(snippet.getLanguage() instanceof DefaultLanguage);
+    }
+
     @Test
     public void toJson() throws Exception {
         Snippet snippet = new Snippet();
