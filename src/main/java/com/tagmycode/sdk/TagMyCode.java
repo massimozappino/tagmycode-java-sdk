@@ -15,6 +15,11 @@ public class TagMyCode {
         this.client = client;
     }
 
+    public Client getClient()
+    {
+        return client;
+    }
+
     public User fetchAccount() throws TagMyCodeException {
         ClientResponse cr = client.sendRequest("account", Verb.GET);
         return new User(cr.getBody());
@@ -51,7 +56,16 @@ public class TagMyCode {
         return new Snippet(cr.getBody());
     }
 
-    public ParamList prepareSnippetParamList(Snippet snippet) {
+    public Snippet fetchSnippet(int snippetId) throws TagMyCodeException {
+        ClientResponse cr = client.sendRequest("snippets/" + snippetId, Verb.GET);
+        return new Snippet(cr.getBody());
+    }
+
+    public void deleteSnippet(int snippetId) throws TagMyCodeException {
+        client.sendRequest("snippets/" + snippetId, Verb.DELETE);
+    }
+
+    protected ParamList prepareSnippetParamList(Snippet snippet) {
         return new ParamList()
                 .add("language_id", snippet.getLanguage().getId())
                 .add("title", snippet.getTitle())
@@ -61,7 +75,7 @@ public class TagMyCode {
                 .add("is_private", snippet.isPrivate());
     }
 
-    public ModelCollection<Snippet> createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
+    protected ModelCollection<Snippet> createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
         ModelCollection<Snippet> collection;
 
         collection = new ModelCollection<Snippet>();
@@ -75,19 +89,5 @@ public class TagMyCode {
             throw new TagMyCodeJsonException(e);
         }
         return collection;
-    }
-
-    public Snippet fetchSnippet(int snippetId) throws TagMyCodeException {
-        ClientResponse cr = client.sendRequest("snippets/" + snippetId, Verb.GET);
-        return new Snippet(cr.getBody());
-    }
-
-    public void deleteSnippet(int snippetId) throws TagMyCodeException {
-        client.sendRequest("snippets/" + snippetId, Verb.DELETE);
-    }
-
-    public Client getClient()
-    {
-        return client;
     }
 }
