@@ -12,7 +12,7 @@ public class IntegrationTest {
 
     @Test
     public void fetchLanguages() throws Exception {
-        Client client = new Client(new TagMyCodeApiProduction(), "123", "456");
+        Client client = new Client(new TagMyCodeApiProduction(), "123", "456", new VoidWallet());
         client.setOauthToken(new OauthToken("123", "456"));
 
         LanguageCollection languages = new TagMyCode(client).fetchLanguages();

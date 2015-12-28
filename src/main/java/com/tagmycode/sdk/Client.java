@@ -19,7 +19,8 @@ public class Client {
     public String endpointUrl;
     private IWallet wallet;
 
-    public Client(TagMyCodeApi tagmycodeApi, String key, String secret) {
+    public Client(TagMyCodeApi tagmycodeApi, String key, String secret, IWallet wallet) {
+        this.wallet = wallet;
         if (tagmycodeApi.isSsl()) {
             new Ssl().disableSslVerification();
         }
@@ -31,7 +32,6 @@ public class Client {
                 .build();
         endpointUrl = tagmycodeApi.getEndpointUrl();
         setOauthToken(null);
-        setWallet(null);
     }
 
     public void setWallet(IWallet wallet) {
@@ -41,12 +41,12 @@ public class Client {
         this.wallet = wallet;
     }
 
-    public Client(String key, String secret) {
-        this(new TagMyCodeApiProduction(), key, secret);
+    public Client(String key, String secret, IWallet wallet) {
+        this(new TagMyCodeApiProduction(), key, secret, wallet);
     }
 
-    public Client(AbstractSecret secret) {
-        this(secret.getConsumerId(), secret.getConsumerSecret());
+    public Client(AbstractSecret secret, IWallet wallet) {
+        this(secret.getConsumerId(), secret.getConsumerSecret(), wallet);
     }
 
     public void fetchOauthToken(String verificationCode) throws TagMyCodeConnectionException {

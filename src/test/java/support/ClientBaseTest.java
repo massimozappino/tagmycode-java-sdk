@@ -2,6 +2,7 @@ package support;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.tagmycode.sdk.Client;
+import com.tagmycode.sdk.VoidWallet;
 import com.tagmycode.sdk.authentication.OauthToken;
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,7 +15,7 @@ public abstract class ClientBaseTest extends BaseTest {
 
     @Before
     public void configureClient() {
-        client = new Client(new TagMyCodeApiStub(), "key", "secret");
+        client = new Client(new TagMyCodeApiStub(), "key", "secret", new VoidWallet());
         client.setOauthToken(new OauthToken("xxx", "yyy"));
     }
 }
