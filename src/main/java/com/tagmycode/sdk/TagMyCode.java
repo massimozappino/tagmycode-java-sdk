@@ -61,6 +61,12 @@ public class TagMyCode {
         return new Snippet(cr.getBody());
     }
 
+    public ModelCollection<Snippet> fetchSnippets() throws TagMyCodeException {
+        ClientResponse cr = client.sendRequest("snippets", Verb.GET);
+
+        return createSnippetsCollection(cr);
+    }
+
     public void deleteSnippet(int snippetId) throws TagMyCodeException {
         client.sendRequest("snippets/" + snippetId, Verb.DELETE);
     }

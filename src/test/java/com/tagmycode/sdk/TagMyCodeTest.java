@@ -79,6 +79,20 @@ public class TagMyCodeTest extends ClientBaseTest {
     }
 
     @Test
+    public void fetchSnippets() throws Exception {
+        stubFor(get(urlMatching("/snippets.*"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(resourceGenerate.aSnippetCollection().toJson()
+                        )));
+
+        ModelCollection<Snippet> snippets = tagMyCode.fetchSnippets();
+
+        assertEquals(resourceGenerate.aSnippetCollection(), snippets);
+    }
+
+    @Test
     public void notFoundSnippetCatch404Error() throws TagMyCodeException {
         try {
             tagMyCode.fetchSnippet(8888888);
