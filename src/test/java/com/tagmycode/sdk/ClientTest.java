@@ -23,12 +23,12 @@ public class ClientTest extends ClientBaseTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void TagMyCodeRestClientShouldFailWithEmptyKeyAndSecret() {
-        new Client(new TagMyCodeApiStub(), "", "");
+        new Client(new TagMyCodeApiStub(), "", "", new VoidWallet());
     }
 
     @Test
     public void simpleConstructorIsForProduction() {
-        Client clientSimple = new Client("consumer_id", "consumer_secret");
+        Client clientSimple = new Client("consumer_id", "consumer_secret", new VoidWallet());
         assertTrue(clientSimple.getAuthorizationUrl().contains("https://tagmycode.com/oauth2/authorize"));
     }
 
@@ -36,7 +36,7 @@ public class ClientTest extends ClientBaseTest {
     public void newClientHasAlwaysOauthToken() throws Exception {
         stubFor(get(urlMatching("/fake_request.*"))
                 .willReturn(aResponse().withStatus(200)));
-        Client newClient = new Client(new TagMyCodeApiStub(), "123", "456");
+        Client newClient = new Client(new TagMyCodeApiStub(), "123", "456", new VoidWallet());
         try {
             newClient.sendRequest("fake_request", Verb.GET);
         } catch (NullPointerException e) {
@@ -58,7 +58,7 @@ public class ClientTest extends ClientBaseTest {
             public String getConsumerSecret() {
                 return "consumer_secret";
             }
-        });
+        }, new VoidWallet());
         assertTrue(clientSimple.getAuthorizationUrl().contains("https://tagmycode.com/oauth2/authorize"));
     }
 
@@ -117,7 +117,7 @@ public class ClientTest extends ClientBaseTest {
 
     @Test
     public void defaultAccessTokenIsNotAuthenticated() {
-        Client defaultClient = new Client(new TagMyCodeApiStub(), "key", "secret");
+        Client defaultClient = new Client(new TagMyCodeApiStub(), "key", "secret", new VoidWallet());
 
         assertFalse(defaultClient.isAuthenticated());
     }
