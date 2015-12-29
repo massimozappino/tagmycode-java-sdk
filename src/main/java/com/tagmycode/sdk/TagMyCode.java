@@ -40,7 +40,7 @@ public class TagMyCode {
         return languages;
     }
 
-    public ModelCollection<Snippet> searchSnippets(String query) throws TagMyCodeException {
+    public SnippetCollection searchSnippets(String query) throws TagMyCodeException {
         ParamList paramList = new ParamList()
                 .add("q", query);
 
@@ -61,7 +61,7 @@ public class TagMyCode {
         return new Snippet(cr.getBody());
     }
 
-    public ModelCollection<Snippet> fetchSnippets() throws TagMyCodeException {
+    public SnippetCollection fetchSnippets() throws TagMyCodeException {
         ClientResponse cr = client.sendRequest("snippets", Verb.GET);
 
         return createSnippetsCollection(cr);
@@ -81,10 +81,8 @@ public class TagMyCode {
                 .add("is_private", snippet.isPrivate());
     }
 
-    protected ModelCollection<Snippet> createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
-        ModelCollection<Snippet> collection;
-
-        collection = new ModelCollection<Snippet>();
+    protected SnippetCollection createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
+        SnippetCollection collection = new SnippetCollection();
 
         try {
             JSONArray jsonArray = new JSONArray(cr.getBody());

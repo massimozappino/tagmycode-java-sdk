@@ -45,8 +45,8 @@ public class ResourceGenerate {
         return languageCollection;
     }
 
-    public ModelCollection<Snippet> aSnippetCollection() throws IOException, TagMyCodeJsonException {
-        ModelCollection<Snippet> snippetCollection = new ModelCollection<Snippet>();
+    public SnippetCollection aSnippetCollection() throws IOException, TagMyCodeJsonException {
+        SnippetCollection snippetCollection = new SnippetCollection();
         snippetCollection.add(aSnippet());
         snippetCollection.add(anotherSnippet());
         return snippetCollection;

@@ -87,7 +87,7 @@ public class TagMyCodeTest extends ClientBaseTest {
                         .withBody(resourceGenerate.aSnippetCollection().toJson()
                         )));
 
-        ModelCollection<Snippet> snippets = tagMyCode.fetchSnippets();
+        SnippetCollection snippets = tagMyCode.fetchSnippets();
 
         assertEquals(resourceGenerate.aSnippetCollection(), snippets);
     }
