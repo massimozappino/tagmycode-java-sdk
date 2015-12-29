@@ -3,6 +3,7 @@ package com.tagmycode.sdk;
 import com.tagmycode.sdk.authentication.*;
 import com.tagmycode.sdk.exception.TagMyCodeApiException;
 import com.tagmycode.sdk.exception.TagMyCodeConnectionException;
+import com.tagmycode.sdk.exception.TagMyCodeException;
 import com.tagmycode.sdk.exception.TagMyCodeUnauthorizedException;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.exceptions.OAuthException;
@@ -17,9 +18,9 @@ public class Client {
     private TagMyCodeServiceImpl service;
     private OauthToken oauthToken;
     public String endpointUrl;
-    private IWallet wallet;
+    private IOauthWallet wallet;
 
-    public Client(TagMyCodeApi tagmycodeApi, String key, String secret, IWallet wallet) {
+    public Client(TagMyCodeApi tagmycodeApi, String key, String secret, IOauthWallet wallet) {
         this.wallet = wallet;
         if (tagmycodeApi.isSsl()) {
             new Ssl().disableSslVerification();
@@ -31,25 +32,27 @@ public class Client {
                 .apiSecret(secret)
                 .build();
         endpointUrl = tagmycodeApi.getEndpointUrl();
-        setOauthToken(null);
+        // TODO remove try/catch
+        try {
+            setOauthToken(null);
+        } catch (TagMyCodeException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void setWallet(IWallet wallet) {
-        if (null == wallet) {
-            wallet = new VoidWallet();
-        }
+    public void setWallet(IOauthWallet wallet) {
         this.wallet = wallet;
     }
 
-    public Client(String key, String secret, IWallet wallet) {
+    public Client(String key, String secret, IOauthWallet wallet) {
         this(new TagMyCodeApiProduction(), key, secret, wallet);
     }
 
-    public Client(AbstractSecret secret, IWallet wallet) {
+    public Client(AbstractSecret secret, IOauthWallet wallet) {
         this(secret.getConsumerId(), secret.getConsumerSecret(), wallet);
     }
 
-    public void fetchOauthToken(String verificationCode) throws TagMyCodeConnectionException {
+    public void fetchOauthToken(String verificationCode) throws TagMyCodeException {
         Verifier verifier = new Verifier(verificationCode);
         try {
             setOauthToken(service.getOauthToken(verifier));
@@ -58,7 +61,7 @@ public class Client {
         }
     }
 
-    public void refreshOauthToken() throws TagMyCodeUnauthorizedException {
+    public void refreshOauthToken() throws TagMyCodeException {
         try {
             setOauthToken(service.getAccessTokenFromRefreshToken(oauthToken.getRefreshToken()));
         } catch (OAuthException e) {
@@ -70,7 +73,7 @@ public class Client {
         return service.getAuthorizationUrl(null);
     }
 
-    public void setOauthToken(OauthToken oauthToken) {
+    public void setOauthToken(OauthToken oauthToken) throws TagMyCodeException {
         if (isTokenValid(oauthToken)) {
             wallet.saveOauthToken(oauthToken);
             this.oauthToken = oauthToken;
@@ -89,11 +92,11 @@ public class Client {
                 && ((token.getAccessToken().getToken().length() != 0) || (token.getRefreshToken().getToken().length() != 0));
     }
 
-    public ClientResponse sendRequest(String uri, Verb verb) throws TagMyCodeConnectionException, TagMyCodeApiException, TagMyCodeUnauthorizedException {
+    public ClientResponse sendRequest(String uri, Verb verb) throws TagMyCodeException {
         return sendRequest(uri, verb, new ParamList());
     }
 
-    public ClientResponse sendRequest(String uri, Verb verb, ParamList paramList) throws TagMyCodeConnectionException, TagMyCodeApiException, TagMyCodeUnauthorizedException {
+    public ClientResponse sendRequest(String uri, Verb verb, ParamList paramList) throws TagMyCodeException {
         OAuthRequest request = signRequest(uri, verb, paramList);
         try {
             Response response = request.send();
@@ -145,7 +148,7 @@ public class Client {
         return isTokenValid(getOauthToken());
     }
 
-    public void revokeAccess() {
+    public void revokeAccess() throws TagMyCodeException {
         setOauthToken(null);
     }
 

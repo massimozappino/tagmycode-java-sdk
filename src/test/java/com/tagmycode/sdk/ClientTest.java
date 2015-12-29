@@ -4,7 +4,6 @@ package com.tagmycode.sdk;
 import com.tagmycode.sdk.authentication.OauthToken;
 import com.tagmycode.sdk.authentication.VoidOauthToken;
 import com.tagmycode.sdk.exception.TagMyCodeApiException;
-import com.tagmycode.sdk.exception.TagMyCodeConnectionException;
 import com.tagmycode.sdk.exception.TagMyCodeException;
 import com.tagmycode.sdk.exception.TagMyCodeUnauthorizedException;
 import org.junit.Test;
@@ -12,6 +11,7 @@ import org.mockito.Mockito;
 import org.scribe.model.Verb;
 import support.ClientBaseTest;
 import support.TagMyCodeApiStub;
+import support.VoidOauthWallet;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.*;
@@ -23,12 +23,12 @@ public class ClientTest extends ClientBaseTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void TagMyCodeRestClientShouldFailWithEmptyKeyAndSecret() {
-        new Client(new TagMyCodeApiStub(), "", "", new VoidWallet());
+        new Client(new TagMyCodeApiStub(), "", "", new VoidOauthWallet());
     }
 
     @Test
     public void simpleConstructorIsForProduction() {
-        Client clientSimple = new Client("consumer_id", "consumer_secret", new VoidWallet());
+        Client clientSimple = new Client("consumer_id", "consumer_secret", new VoidOauthWallet());
         assertTrue(clientSimple.getAuthorizationUrl().contains("https://tagmycode.com/oauth2/authorize"));
     }
 
@@ -36,7 +36,7 @@ public class ClientTest extends ClientBaseTest {
     public void newClientHasAlwaysOauthToken() throws Exception {
         stubFor(get(urlMatching("/fake_request.*"))
                 .willReturn(aResponse().withStatus(200)));
-        Client newClient = new Client(new TagMyCodeApiStub(), "123", "456", new VoidWallet());
+        Client newClient = new Client(new TagMyCodeApiStub(), "123", "456", new VoidOauthWallet());
         try {
             newClient.sendRequest("fake_request", Verb.GET);
         } catch (NullPointerException e) {
@@ -58,18 +58,18 @@ public class ClientTest extends ClientBaseTest {
             public String getConsumerSecret() {
                 return "consumer_secret";
             }
-        }, new VoidWallet());
+        }, new VoidOauthWallet());
         assertTrue(clientSimple.getAuthorizationUrl().contains("https://tagmycode.com/oauth2/authorize"));
     }
 
     @Test
-    public void emptyOauthToken() {
+    public void emptyOauthToken() throws TagMyCodeException {
         client.setOauthToken(new OauthToken("", ""));
         assertFalse(client.isAuthenticated());
     }
 
     @Test
-    public void revokeAccess() {
+    public void revokeAccess() throws TagMyCodeException {
         client.setOauthToken(new OauthToken("1", "2"));
         assertNotNull(client.getOauthToken());
         client.revokeAccess();
@@ -104,38 +104,38 @@ public class ClientTest extends ClientBaseTest {
 
 
     @Test
-    public void validAccessTokenIsAuthenticated() {
+    public void validAccessTokenIsAuthenticated() throws TagMyCodeException {
         client.setOauthToken(new OauthToken("1", "1"));
         assertTrue(client.isAuthenticated());
     }
 
     @Test
-    public void nullAccessTokenIsNotAuthenticated() {
+    public void nullAccessTokenIsNotAuthenticated() throws TagMyCodeException {
         client.setOauthToken(null);
         assertFalse(client.isAuthenticated());
     }
 
     @Test
     public void defaultAccessTokenIsNotAuthenticated() {
-        Client defaultClient = new Client(new TagMyCodeApiStub(), "key", "secret", new VoidWallet());
+        Client defaultClient = new Client(new TagMyCodeApiStub(), "key", "secret", new VoidOauthWallet());
 
         assertFalse(defaultClient.isAuthenticated());
     }
 
     @Test
-    public void voidAccessTokenIsNotAuthenticated() {
+    public void voidAccessTokenIsNotAuthenticated() throws TagMyCodeException {
         client.setOauthToken(new OauthToken("", ""));
         assertFalse(client.isAuthenticated());
     }
 
     @Test
-    public void nullOauthTokenIsVoidOauthTokenInstance(){
+    public void nullOauthTokenIsVoidOauthTokenInstance() throws TagMyCodeException {
         client.setOauthToken(null);
         assertTrue(client.getOauthToken() instanceof VoidOauthToken);
     }
 
     @Test
-    public void fetchTokensShouldWorkCorrectly() throws TagMyCodeConnectionException {
+    public void fetchTokensShouldWorkCorrectly() throws TagMyCodeException {
         String accessTokenString = "token123";
         String refreshTokenString = "refreshToken";
         createStubForOauth(accessTokenString, refreshTokenString);
@@ -234,9 +234,9 @@ public class ClientTest extends ClientBaseTest {
 
 
     @Test
-    public void walletInvokedOnSetOauthToken() {
+    public void walletInvokedOnSetOauthToken() throws TagMyCodeException {
         Client clientSpy = spy(client);
-        IWallet walletMock = mock(IWallet.class);
+        IOauthWallet walletMock = mock(IOauthWallet.class);
         clientSpy.setWallet(walletMock);
         OauthToken oauthToken = new OauthToken("123456", "123456");
         clientSpy.setOauthToken(oauthToken);
@@ -245,9 +245,9 @@ public class ClientTest extends ClientBaseTest {
     }
 
     @Test
-    public void walletNotInvokedWithNullOauthToken() {
+    public void walletNotInvokedWithNullOauthToken() throws TagMyCodeException {
         Client clientSpy = spy(client);
-        IWallet walletMock = mock(IWallet.class);
+        IOauthWallet walletMock = mock(IOauthWallet.class);
         clientSpy.setWallet(walletMock);
         clientSpy.setOauthToken(null);
 
