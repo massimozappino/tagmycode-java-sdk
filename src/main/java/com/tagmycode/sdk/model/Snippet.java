@@ -41,7 +41,7 @@ public class Snippet extends ModelAbstract {
             language = new Language(getJsonObject().getJSONObject("language"));
             tags = getJsonObject().getString("tags");
             isPrivate = getJsonObject().getBoolean("is_private");
-            url = getJsonObject().getString("url");
+            url = getJsonObject().isNull("url") ? null : getJsonObject().getString("url");
             creationDate = new DateParser().parseDate(getJsonObject().getString("created_at"));
             updateDate = new DateParser().parseDate(getJsonObject().getString("updated_at"));
         } catch (JSONException e) {
@@ -61,7 +61,8 @@ public class Snippet extends ModelAbstract {
         jo.put("language", getLanguage() != null ? new JSONObject(getLanguage().toJson()) : "");
         jo.put("tags", getTags());
         jo.put("is_private", isPrivate());
-        jo.put("url", getUrl());
+        String url = getUrl();
+        jo.put("url", url != null ? url : JSONObject.NULL);
         jo.put("created_at", new DateParser().toISO8601(getCreationDate()));
         jo.put("updated_at", new DateParser().toISO8601(getUpdateDate()));
 

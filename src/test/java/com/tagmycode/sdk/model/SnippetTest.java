@@ -2,10 +2,10 @@ package com.tagmycode.sdk.model;
 
 import com.tagmycode.sdk.DateParser;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
-import support.ModelAbstractBaseTest;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
+import support.ModelAbstractBaseTest;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -23,7 +23,7 @@ public class SnippetTest extends ModelAbstractBaseTest {
     @Test
     public void newModelWithJsonObject() throws Exception {
 
-        String jsonString = resourceGenerate.getResourceReader().readFile("language.json");
+        String jsonString = resourceGenerate.aLanguage().toJson();
         JSONObject jsonObject = new JSONObject()
                 .put("id", 1)
                 .put("title", "My title")
@@ -37,6 +37,15 @@ public class SnippetTest extends ModelAbstractBaseTest {
                 .put("updated_at", "2010-11-22T13:11:25+00:00");
         Snippet s = new Snippet(jsonObject);
         assertSnippetValues(s, 1);
+    }
+
+    @Test
+    public void urlCanBeNull() throws Exception {
+        Snippet snippet = resourceGenerate.aSnippet();
+        snippet.setUrl(null);
+
+        assertEquals(snippet.toJson(), new Snippet(snippet.toJson()).toJson());
+        assertNull(new Snippet(snippet.toJson()).getUrl());
     }
 
     @Test
