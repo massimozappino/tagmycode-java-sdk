@@ -10,12 +10,12 @@ public class ResourceGenerate {
 
     private ResourceReader resourceReader;
 
-    public ResourceReader getResourceReader() {
-        return resourceReader;
-    }
-
     public ResourceGenerate() {
         resourceReader = new ResourceReader();
+    }
+
+    public ResourceReader getResourceReader() {
+        return resourceReader;
     }
 
     public Snippet aSnippet() throws IOException, TagMyCodeJsonException {
@@ -34,7 +34,7 @@ public class ResourceGenerate {
         return new Language(resourceReader.readFile("language2.json"));
     }
 
-    public User anUser() throws IOException, TagMyCodeJsonException {
+    public User aUser() throws IOException, TagMyCodeJsonException {
         return new User(resourceReader.readFile("user.json"));
     }
 

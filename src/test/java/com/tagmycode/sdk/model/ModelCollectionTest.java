@@ -1,20 +1,16 @@
 package com.tagmycode.sdk.model;
 
 
-import com.tagmycode.sdk.exception.TagMyCodeJsonException;
-import org.json.JSONException;
 import org.junit.Ignore;
 import org.junit.Test;
 import support.BaseTest;
-
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
 public class ModelCollectionTest extends BaseTest {
 
     @Test
-    public void toJson() throws IOException, JSONException, TagMyCodeJsonException {
+    public void toJson() throws Exception {
         LanguageCollection lc = new LanguageCollection();
 
         Language language1 = resourceGenerate.aLanguage();
@@ -27,6 +23,15 @@ public class ModelCollectionTest extends BaseTest {
         lc.add(language2);
 
         assertEquals("[" + language1.toJson() + ", " + language2.toJson() + "]", lc.toJson());
+    }
+
+    @Test
+    public void toJsonAllowsDuplicate() throws Exception {
+        SnippetCollection snippets = new SnippetCollection();
+        snippets.add(resourceGenerate.aSnippet());
+        snippets.add(resourceGenerate.aSnippet());
+
+        assertEquals(snippets, new SnippetCollection(snippets.toJson()));
     }
 
     @Test

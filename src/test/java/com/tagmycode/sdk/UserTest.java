@@ -2,9 +2,9 @@ package com.tagmycode.sdk;
 
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import com.tagmycode.sdk.model.User;
-import support.ModelAbstractBaseTest;
 import org.json.JSONObject;
 import org.junit.Test;
+import support.ModelAbstractBaseTest;
 
 import java.io.IOException;
 
@@ -48,14 +48,14 @@ public class UserTest extends ModelAbstractBaseTest {
                 .setFirstname("Name")
                 .setLastname("Surname")
                 .setEmail("myfake@email.not");
-        assertTrue(user.equals(resourceGenerate.anUser()));
+        assertTrue(user.equals(resourceGenerate.aUser()));
     }
 
     @Override
     @Test
     public void compareModelObject() throws Exception {
-        User model1 = resourceGenerate.anUser();
-        User model2 = resourceGenerate.anUser();
+        User model1 = resourceGenerate.aUser();
+        User model2 = resourceGenerate.aUser();
         assertTrue(model1.equals(model2));
 
         model2.setUsername("false");
@@ -65,7 +65,7 @@ public class UserTest extends ModelAbstractBaseTest {
     @Override
     @Test
     public void serializeAndDeserialize() throws Exception {
-        User model = resourceGenerate.anUser();
+        User model = resourceGenerate.aUser();
         User restored = new User(model.toJson());
         assertTrue(model.equals(restored));
     }

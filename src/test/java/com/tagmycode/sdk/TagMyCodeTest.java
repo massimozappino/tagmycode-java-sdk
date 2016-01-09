@@ -29,10 +29,10 @@ public class TagMyCodeTest extends ClientBaseTest {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(resourceGenerate.anUser().toJson())));
+                        .withBody(resourceGenerate.aUser().toJson())));
 
         User user = tagMyCode.fetchAccount();
-        assertEquals(resourceGenerate.anUser(), user);
+        assertEquals(resourceGenerate.aUser(), user);
     }
 
     @Test
