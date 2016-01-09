@@ -2,9 +2,10 @@ package com.tagmycode.sdk.model;
 
 
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
-import support.BaseTest;
 import org.json.JSONException;
+import org.junit.Ignore;
 import org.junit.Test;
+import support.BaseTest;
 
 import java.io.IOException;
 
@@ -26,5 +27,17 @@ public class ModelCollectionTest extends BaseTest {
         lc.add(language2);
 
         assertEquals("[" + language1.toJson() + ", " + language2.toJson() + "]", lc.toJson());
+    }
+
+    @Test
+    @Ignore
+    public void avoidNPE() throws Exception {
+        SnippetCollection newSnippetCollection = resourceGenerate.aSnippetCollection();
+        newSnippetCollection.add(resourceGenerate.anotherSnippet());
+        newSnippetCollection.add(new Snippet().setId(5));
+
+        assertEquals(4, newSnippetCollection.size());
+
+        assertEquals(new SnippetCollection(newSnippetCollection.toJson()), newSnippetCollection);
     }
 }
