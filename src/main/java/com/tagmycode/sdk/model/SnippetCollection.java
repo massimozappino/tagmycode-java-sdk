@@ -21,4 +21,14 @@ public class SnippetCollection extends ModelCollection<Snippet> {
     public SnippetCollection() {
 
     }
+
+    public boolean deleteById(int id) {
+        for (Snippet snippet : this) {
+            if (snippet.getId() == id) {
+                remove(snippet);
+                return true;
+            }
+        }
+        return false;
+    }
 }

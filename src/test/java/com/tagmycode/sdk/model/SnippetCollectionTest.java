@@ -24,4 +24,19 @@ public class SnippetCollectionTest extends BaseTest {
         assertEquals(json, snippetCollection.toJson());
     }
 
+    @Test
+    public void testDeleteSnippetById() throws Exception {
+        boolean isDeleted;
+        SnippetCollection snippetCollection = new SnippetCollection(new ResourceGenerate().aSnippetCollection().toJson());
+        assertEquals(2, snippetCollection.size());
+
+        isDeleted = snippetCollection.deleteById(999);
+        assertEquals(false, isDeleted);
+        assertEquals(2, snippetCollection.size());
+
+        isDeleted = snippetCollection.deleteById(1);
+        assertEquals(true, isDeleted);
+        assertEquals(1, snippetCollection.size());
+    }
+
 }
