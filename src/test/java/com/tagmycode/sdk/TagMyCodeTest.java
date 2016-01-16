@@ -125,9 +125,28 @@ public class TagMyCodeTest extends ClientBaseTest {
         Snippet snippetInput = new Snippet();
         snippetInput.setCode("code\r\nsecond line");
         snippetInput.setLanguage(resourceGenerate.aLanguage());
+
         Snippet snippet = tagMyCode.createSnippet(snippetInput);
 
         assertEquals(resourceGenerate.aSnippet(), snippet);
+    }
+
+    @Test
+    public void updateSnippet() throws Exception {
+        Snippet snippet = resourceGenerate.aSnippet();
+        stubFor(put(urlMatching("/snippets.*"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(snippet.toJson()
+                        )));
+
+        Snippet snippetInput = new Snippet();
+        snippetInput.setId(6);
+        snippetInput.setCode("code\r\nsecond line");
+        snippetInput.setLanguage(resourceGenerate.aLanguage());
+
+        assertEquals(snippet, tagMyCode.updateSnippet(snippetInput));
     }
 
     @Test

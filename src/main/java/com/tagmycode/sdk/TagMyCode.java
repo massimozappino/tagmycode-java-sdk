@@ -50,10 +50,20 @@ public class TagMyCode {
     }
 
     public Snippet createSnippet(Snippet inputSnippet) throws TagMyCodeException {
-        ParamList paramList = prepareSnippetParamList(inputSnippet);
-        ClientResponse cr = client.sendRequest("snippets/", Verb.POST, paramList);
+        ClientResponse cr = clientResponseForSnippetResource(inputSnippet, Verb.POST);
 
         return new Snippet(cr.getBody());
+    }
+
+    public Snippet updateSnippet(Snippet inputSnippet) throws TagMyCodeException {
+        ClientResponse cr = clientResponseForSnippetResource(inputSnippet, Verb.PUT);
+
+        return new Snippet(cr.getBody());
+    }
+
+    private ClientResponse clientResponseForSnippetResource(Snippet inputSnippet, Verb put) throws TagMyCodeException {
+        ParamList paramList = prepareSnippetParamList(inputSnippet);
+        return client.sendRequest("snippets/", put, paramList);
     }
 
     public Snippet fetchSnippet(int snippetId) throws TagMyCodeException {
