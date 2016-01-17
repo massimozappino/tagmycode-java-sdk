@@ -132,26 +132,38 @@ public class TagMyCodeTest extends ClientBaseTest {
     }
 
     @Test
-    public void updateSnippet() throws Exception {
+    public void updateSnippetWithSuccess() throws Exception {
         Snippet snippet = resourceGenerate.aSnippet();
-        stubFor(put(urlMatching("/snippets.*"))
+        stubFor(put(urlMatching("/snippets/1.*"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody(snippet.toJson()
                         )));
 
-        Snippet snippetInput = new Snippet();
-        snippetInput.setId(6);
-        snippetInput.setCode("code\r\nsecond line");
-        snippetInput.setLanguage(resourceGenerate.aLanguage());
+        assertEquals(snippet, tagMyCode.updateSnippet(resourceGenerate.aSnippet()));
+        verify(putRequestedFor(urlMatching("/snippets/1.*")));
+    }
 
-        assertEquals(snippet, tagMyCode.updateSnippet(snippetInput));
+    @Test
+    public void updateSnippetWithoutSuccess() throws Exception {
+        stubFor(put(urlMatching("/snippets/1.*"))
+                .willReturn(aResponse()
+                                .withStatus(404)
+                                .withHeader("Content-Type", "application/json")
+                ));
+
+        try {
+            tagMyCode.updateSnippet(resourceGenerate.anotherSnippet());
+            fail("Expected exception");
+        } catch (TagMyCodeApiException ignore) {
+            verify(putRequestedFor(urlMatching("/snippets/9?.*")));
+        }
     }
 
     @Test
     public void deleteSnippetWithSuccess() throws Exception {
-        stubFor(delete(urlMatching("/snippets.*"))
+        stubFor(delete(urlMatching("/snippets/1.*"))
                 .willReturn(aResponse()
                                 .withStatus(204)
                                 .withHeader("Content-Type", "application/json")
@@ -160,7 +172,7 @@ public class TagMyCodeTest extends ClientBaseTest {
 
         tagMyCode.deleteSnippet(1);
 
-        verify(deleteRequestedFor(urlMatching("/snippets/1?.*")));
+        verify(deleteRequestedFor(urlMatching("/snippets/1.*")));
     }
 
     @Test
