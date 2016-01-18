@@ -6,6 +6,7 @@ import support.BaseTest;
 import support.ResourceGenerate;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class SnippetCollectionTest extends BaseTest {
 
@@ -39,4 +40,19 @@ public class SnippetCollectionTest extends BaseTest {
         assertEquals(1, snippetCollection.size());
     }
 
+    @Test
+    public void testGetSnippetById() throws Exception {
+        SnippetCollection snippets = new SnippetCollection();
+        Snippet snippet1 = resourceGenerate.aSnippet();
+        Snippet snippet2 = resourceGenerate.anotherSnippet();
+        snippets.add(snippet1);
+        snippets.add(snippet2);
+        snippets.add(new Snippet().setId(0));
+
+        assertEquals(snippet1, snippets.getById(snippet1.getId()));
+        assertEquals(snippet2, snippets.getById(snippet2.getId()));
+        assertNull(snippets.getById(99));
+        assertNull(snippets.getById(0));
+
+    }
 }

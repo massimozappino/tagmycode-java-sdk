@@ -3,9 +3,10 @@ package com.tagmycode.sdk;
 
 import com.tagmycode.sdk.exception.TagMyCodeException;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
-import com.tagmycode.sdk.model.*;
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.tagmycode.sdk.model.LanguageCollection;
+import com.tagmycode.sdk.model.Snippet;
+import com.tagmycode.sdk.model.SnippetCollection;
+import com.tagmycode.sdk.model.User;
 import org.scribe.model.Verb;
 
 public class TagMyCode {
@@ -26,17 +27,7 @@ public class TagMyCode {
 
     public LanguageCollection fetchLanguages() throws TagMyCodeException {
         ClientResponse cr = client.sendRequest("languages", Verb.GET);
-        LanguageCollection languages = new LanguageCollection();
-
-        try {
-            JSONArray jsonArray = new JSONArray(cr.getBody());
-            for (int i = 0; i < jsonArray.length(); i++) {
-                languages.add(new Language(jsonArray.getJSONObject(i)));
-            }
-        } catch (JSONException e) {
-            throw new TagMyCodeJsonException(e);
-        }
-        return languages;
+        return createLanguageCollection(cr);
     }
 
     public SnippetCollection searchSnippets(String query) throws TagMyCodeException {
@@ -88,17 +79,11 @@ public class TagMyCode {
                 .add("is_private", snippet.isPrivate());
     }
 
-    protected SnippetCollection createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
-        SnippetCollection collection = new SnippetCollection();
+    private LanguageCollection createLanguageCollection(ClientResponse cr) throws TagMyCodeJsonException {
+        return new LanguageCollection(cr.getBody());
+    }
 
-        try {
-            JSONArray jsonArray = new JSONArray(cr.getBody());
-            for (int i = 0; i < jsonArray.length(); i++) {
-                collection.add(new Snippet(jsonArray.getJSONObject(i)));
-            }
-        } catch (JSONException e) {
-            throw new TagMyCodeJsonException(e);
-        }
-        return collection;
+    protected SnippetCollection createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
+        return new SnippetCollection(cr.getBody());
     }
 }

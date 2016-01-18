@@ -10,8 +10,7 @@ public class SnippetCollection extends ModelCollection<Snippet> {
         try {
             ja = new JSONArray(json);
             for (int i = 0; i < ja.length(); i++) {
-                Snippet snippet = new Snippet(ja.getJSONObject(i));
-                add(snippet);
+                add(new Snippet(ja.getJSONObject(i)));
             }
         } catch (JSONException e) {
             throw new TagMyCodeJsonException(e);
@@ -30,5 +29,17 @@ public class SnippetCollection extends ModelCollection<Snippet> {
             }
         }
         return false;
+    }
+
+    public Snippet getById(int id) {
+        if (id == 0) {
+            return null;
+        }
+        for (Snippet snippet : this) {
+            if (snippet.getId() == id) {
+                return snippet;
+            }
+        }
+        return null;
     }
 }
