@@ -42,4 +42,14 @@ public class SnippetCollection extends ModelCollection<Snippet> {
         }
         return null;
     }
+
+    public Snippet updateSnippet(Snippet snippet) {
+        Snippet actualSnippet = getById(snippet.getId());
+        if (actualSnippet == null) {
+            return null;
+        }
+        int i = indexOf(actualSnippet);
+        set(i, snippet);
+        return snippet;
+    }
 }

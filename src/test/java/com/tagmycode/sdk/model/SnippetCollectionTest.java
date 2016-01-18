@@ -53,6 +53,27 @@ public class SnippetCollectionTest extends BaseTest {
         assertEquals(snippet2, snippets.getById(snippet2.getId()));
         assertNull(snippets.getById(99));
         assertNull(snippets.getById(0));
+    }
 
+    @Test
+    public void testUpdateSnippet() throws Exception {
+        SnippetCollection snippets = new SnippetCollection();
+        Snippet snippet1 = resourceGenerate.aSnippet();
+        Snippet snippet2 = resourceGenerate.anotherSnippet();
+        snippets.add(snippet1);
+        snippets.add(snippet2);
+        snippets.add(new Snippet().setId(0));
+
+        Snippet updatedSnippet1 = snippets.updateSnippet(snippet1);
+        assertEquals(snippet1, updatedSnippet1);
+        assertEquals(snippet1, snippets.getById(updatedSnippet1.getId()));
+
+        assertNull(snippets.updateSnippet(new Snippet()));
+
+        Snippet updatedSnippet2 = new Snippet().setId(snippet2.getId()).setTitle("updated title");
+        assertEquals(snippet2, snippets.getById(updatedSnippet2.getId()));
+
+        Snippet nonPresentSnippet = new Snippet().setId(555);
+        assertNull(snippets.getById(nonPresentSnippet.getId()));
     }
 }
