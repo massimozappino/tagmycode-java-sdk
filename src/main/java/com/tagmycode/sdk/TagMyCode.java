@@ -59,8 +59,16 @@ public class TagMyCode {
         return new Snippet(cr.getBody());
     }
 
-    public SnippetCollection fetchSnippets() throws TagMyCodeException {
+    public SnippetCollection fetchSnippetsChanges() throws TagMyCodeException {
         ClientResponse cr = client.sendRequest("snippets", Verb.GET);
+
+        return createSnippetsCollection(cr);
+    }
+
+    public SnippetCollection fetchSnippetsChanges(int lastUpdate) throws TagMyCodeException {
+        ParamList paramList = new ParamList();
+        paramList.add("last_update", lastUpdate);
+        ClientResponse cr = client.sendRequest("snippets", Verb.GET, paramList);
 
         return createSnippetsCollection(cr);
     }
@@ -86,4 +94,5 @@ public class TagMyCode {
     protected SnippetCollection createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
         return new SnippetCollection(cr.getBody());
     }
+
 }

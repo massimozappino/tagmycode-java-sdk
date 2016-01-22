@@ -87,7 +87,21 @@ public class TagMyCodeTest extends ClientBaseTest {
                         .withBody(resourceGenerate.aSnippetCollection().toJson()
                         )));
 
-        SnippetCollection snippets = tagMyCode.fetchSnippets();
+        SnippetCollection snippets = tagMyCode.fetchSnippetsChanges();
+
+        assertEquals(resourceGenerate.aSnippetCollection(), snippets);
+    }
+
+    @Test
+    public void fetchSnippetsChanges() throws Exception {
+        stubFor(get(urlMatching("/snippets\\?last_update=123434567.*"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(resourceGenerate.aSnippetCollection().toJson()
+                        )));
+
+        SnippetCollection snippets = tagMyCode.fetchSnippetsChanges(123434567);
 
         assertEquals(resourceGenerate.aSnippetCollection(), snippets);
     }
