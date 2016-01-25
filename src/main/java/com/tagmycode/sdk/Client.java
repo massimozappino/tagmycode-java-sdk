@@ -15,9 +15,9 @@ import org.scribe.model.Verifier;
 import java.util.Map;
 
 public class Client {
+    public String endpointUrl;
     private TagMyCodeServiceImpl service;
     private OauthToken oauthToken;
-    public String endpointUrl;
     private IOauthWallet wallet;
 
     public Client(TagMyCodeApi tagmycodeApi, String key, String secret, IOauthWallet wallet) {
@@ -40,16 +40,16 @@ public class Client {
         }
     }
 
-    public void setWallet(IOauthWallet wallet) {
-        this.wallet = wallet;
-    }
-
     public Client(String key, String secret, IOauthWallet wallet) {
         this(new TagMyCodeApiProduction(), key, secret, wallet);
     }
 
     public Client(AbstractSecret secret, IOauthWallet wallet) {
         this(secret.getConsumerId(), secret.getConsumerSecret(), wallet);
+    }
+
+    public void setWallet(IOauthWallet wallet) {
+        this.wallet = wallet;
     }
 
     public void fetchOauthToken(String verificationCode) throws TagMyCodeException {
@@ -73,6 +73,10 @@ public class Client {
         return service.getAuthorizationUrl(null);
     }
 
+    public OauthToken getOauthToken() {
+        return oauthToken;
+    }
+
     public void setOauthToken(OauthToken oauthToken) throws TagMyCodeException {
         if (isTokenValid(oauthToken)) {
             wallet.saveOauthToken(oauthToken);
@@ -82,10 +86,6 @@ public class Client {
         }
     }
 
-    public OauthToken getOauthToken() {
-        return oauthToken;
-    }
-
     private boolean isTokenValid(OauthToken token) {
         return (token != null)
                 && !(token instanceof VoidOauthToken)
@@ -93,17 +93,21 @@ public class Client {
     }
 
     public ClientResponse sendRequest(String uri, Verb verb) throws TagMyCodeException {
-        return sendRequest(uri, verb, new ParamList());
+        return sendRequest(uri, verb, new ParamList(), new ParamList());
     }
 
     public ClientResponse sendRequest(String uri, Verb verb, ParamList paramList) throws TagMyCodeException {
-        OAuthRequest request = signRequest(uri, verb, paramList);
+        return sendRequest(uri, verb, paramList, new ParamList());
+    }
+
+    public ClientResponse sendRequest(String uri, Verb verb, ParamList paramList, ParamList headers) throws TagMyCodeException {
+        OAuthRequest request = signRequest(uri, verb, paramList, headers);
         try {
             Response response = request.send();
 
             if (response.getCode() == 401) {
                 refreshOauthToken();
-                request = signRequest(uri, verb, paramList);
+                request = signRequest(uri, verb, paramList, headers);
                 response = request.send();
             }
 
@@ -113,13 +117,14 @@ public class Client {
         }
     }
 
-    private OAuthRequest signRequest(String uri, Verb verb, ParamList paramList) {
-        OAuthRequest request = createRequestObject(uri, verb, paramList);
+    private OAuthRequest signRequest(String uri, Verb verb, ParamList paramList, ParamList headers) {
+        OAuthRequest request = createRequestObject(uri, verb, paramList, headers);
+
         this.service.signRequest(oauthToken.getAccessToken(), request);
         return request;
     }
 
-    private OAuthRequest createRequestObject(String uri, Verb verb, ParamList paramList) {
+    private OAuthRequest createRequestObject(String uri, Verb verb, ParamList paramList, ParamList headers) {
         String endpoint = this.endpointUrl + "/" + uri;
         OAuthRequest request = new OAuthRequest(verb, endpoint);
 
@@ -130,6 +135,11 @@ public class Client {
                 request.addBodyParameter(e.getKey(), e.getValue());
             }
         }
+
+        for (Map.Entry<String, String> e : headers.entrySet()) {
+            request.addHeader(e.getKey(), e.getValue());
+        }
+
         return request;
     }
 

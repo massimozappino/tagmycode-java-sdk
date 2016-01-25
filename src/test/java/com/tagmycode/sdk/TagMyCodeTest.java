@@ -94,7 +94,8 @@ public class TagMyCodeTest extends ClientBaseTest {
 
     @Test
     public void fetchSnippetsChanges() throws Exception {
-        stubFor(get(urlMatching("/snippets\\?last_update=123434567.*"))
+        stubFor(get(urlMatching("/snippets.*"))
+                .withHeader("Snippets-Changes-Since", equalTo("123434567"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")

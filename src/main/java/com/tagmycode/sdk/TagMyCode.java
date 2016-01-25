@@ -66,9 +66,9 @@ public class TagMyCode {
     }
 
     public SnippetCollection fetchSnippetsChanges(int lastUpdate) throws TagMyCodeException {
-        ParamList paramList = new ParamList();
-        paramList.add("last_update", lastUpdate);
-        ClientResponse cr = client.sendRequest("snippets", Verb.GET, paramList);
+        ParamList headers = new ParamList();
+        headers.add("Snippets-Changes-Since", lastUpdate);
+        ClientResponse cr = client.sendRequest("snippets", Verb.GET, new ParamList(), headers);
 
         return createSnippetsCollection(cr);
     }
