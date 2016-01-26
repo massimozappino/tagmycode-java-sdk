@@ -9,6 +9,8 @@ import support.ClientBaseTest;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TagMyCodeTest extends ClientBaseTest {
     TagMyCode tagMyCode;
@@ -105,6 +107,7 @@ public class TagMyCodeTest extends ClientBaseTest {
         SnippetCollection snippets = tagMyCode.fetchSnippetsChanges("Sun, 24 Jan 2016 20:00:00 GMT");
 
         assertEquals(resourceGenerate.aSnippetCollection(), snippets);
+        assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", tagMyCode.getLastSnippetUpdate());
     }
 
     @Test
@@ -145,6 +148,19 @@ public class TagMyCodeTest extends ClientBaseTest {
 
         assertEquals(resourceGenerate.aSnippet(), snippet);
     }
+
+    @Test
+    public void createSnippetsCollection() throws Exception {
+        assertEquals(null, tagMyCode.getLastSnippetUpdate());
+        ClientResponse mock = mock(ClientResponse.class);
+        when(mock.getBody()).thenReturn(resourceGenerate.aSnippetCollection().toJson());
+        when(mock.getLastUpdate()).thenReturn("xxx");
+
+        tagMyCode.createSnippetsCollection(mock);
+
+        assertEquals("xxx", tagMyCode.getLastSnippetUpdate());
+    }
+
 
     @Test
     public void updateSnippetWithSuccess() throws Exception {

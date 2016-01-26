@@ -23,6 +23,7 @@ public abstract class BaseTest {
         when(response.getHeader("X-RateLimit-Limit")).thenReturn("100");
         when(response.getHeader("X-RateLimit-Remaining")).thenReturn("50");
         when(response.getHeader("X-RateLimit-Reset")).thenReturn("1387110772");
+        when(response.getHeader("Last-Update")).thenReturn("Sun, 24 Jan 2016 20:00:00 GMT");
 
         return response;
     }

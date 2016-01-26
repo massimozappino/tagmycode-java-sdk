@@ -47,4 +47,8 @@ public class ClientResponse {
     public ErrorResponse gerErrorResponse() {
         return new ErrorResponse(getBody());
     }
+
+    public String getLastUpdate() {
+        return response.getHeader("Last-Update");
+    }
 }

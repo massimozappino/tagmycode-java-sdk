@@ -1,8 +1,8 @@
 package com.tagmycode.sdk;
 
-import support.BaseTest;
 import org.junit.Before;
 import org.junit.Test;
+import support.BaseTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -34,5 +34,10 @@ public class ClientResponseTest extends BaseTest {
     @Test
     public void isError() {
         assertEquals(false, clientResponse.isError());
+    }
+
+    @Test
+    public void testGetLastUpdate() {
+        assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", clientResponse.getLastUpdate());
     }
 }

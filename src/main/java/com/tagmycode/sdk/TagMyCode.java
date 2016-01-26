@@ -11,6 +11,7 @@ import org.scribe.model.Verb;
 
 public class TagMyCode {
     private final Client client;
+    private String lastSnippetUpdate;
 
     public TagMyCode(Client client) {
         this.client = client;
@@ -92,7 +93,11 @@ public class TagMyCode {
     }
 
     protected SnippetCollection createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
+        lastSnippetUpdate = cr.getLastUpdate();
         return new SnippetCollection(cr.getBody());
     }
 
+    public String getLastSnippetUpdate() {
+        return lastSnippetUpdate;
+    }
 }
