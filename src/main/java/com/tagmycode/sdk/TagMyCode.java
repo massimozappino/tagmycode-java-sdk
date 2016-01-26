@@ -59,15 +59,15 @@ public class TagMyCode {
         return new Snippet(cr.getBody());
     }
 
-    public SnippetCollection fetchSnippetsChanges() throws TagMyCodeException {
+    public SnippetCollection fetchSnippetsCollection() throws TagMyCodeException {
         ClientResponse cr = client.sendRequest("snippets", Verb.GET);
 
         return createSnippetsCollection(cr);
     }
 
-    public SnippetCollection fetchSnippetsChanges(int lastUpdate) throws TagMyCodeException {
+    public SnippetCollection fetchSnippetsChanges(String gmtDate) throws TagMyCodeException {
         ParamList headers = new ParamList();
-        headers.add("Snippets-Changes-Since", lastUpdate);
+        headers.add("Snippets-Changes-Since", gmtDate);
         ClientResponse cr = client.sendRequest("snippets", Verb.GET, new ParamList(), headers);
 
         return createSnippetsCollection(cr);

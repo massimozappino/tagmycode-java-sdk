@@ -79,7 +79,7 @@ public class TagMyCodeTest extends ClientBaseTest {
     }
 
     @Test
-    public void fetchSnippets() throws Exception {
+    public void fetchSnippetsCollection() throws Exception {
         stubFor(get(urlMatching("/snippets.*"))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -87,7 +87,7 @@ public class TagMyCodeTest extends ClientBaseTest {
                         .withBody(resourceGenerate.aSnippetCollection().toJson()
                         )));
 
-        SnippetCollection snippets = tagMyCode.fetchSnippetsChanges();
+        SnippetCollection snippets = tagMyCode.fetchSnippetsCollection();
 
         assertEquals(resourceGenerate.aSnippetCollection(), snippets);
     }
@@ -95,14 +95,14 @@ public class TagMyCodeTest extends ClientBaseTest {
     @Test
     public void fetchSnippetsChanges() throws Exception {
         stubFor(get(urlMatching("/snippets.*"))
-                .withHeader("Snippets-Changes-Since", equalTo("123434567"))
+                .withHeader("Snippets-Changes-Since", equalTo("Sun, 24 Jan 2016 20:00:00 GMT"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody(resourceGenerate.aSnippetCollection().toJson()
                         )));
 
-        SnippetCollection snippets = tagMyCode.fetchSnippetsChanges(123434567);
+        SnippetCollection snippets = tagMyCode.fetchSnippetsChanges("Sun, 24 Jan 2016 20:00:00 GMT");
 
         assertEquals(resourceGenerate.aSnippetCollection(), snippets);
     }
