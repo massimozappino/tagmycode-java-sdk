@@ -51,4 +51,8 @@ public class ResourceGenerate {
         snippetCollection.add(anotherSnippet());
         return snippetCollection;
     }
+
+    public String aSnippetsLastUpdate() {
+        return "Sun, 24 Jan 2016 20:00:00 GMT";
+    }
 }

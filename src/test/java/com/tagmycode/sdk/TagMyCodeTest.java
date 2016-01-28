@@ -97,14 +97,14 @@ public class TagMyCodeTest extends ClientBaseTest {
     @Test
     public void fetchSnippetsChanges() throws Exception {
         stubFor(get(urlMatching("/snippets.*"))
-                .withHeader("Snippets-Changes-Since", equalTo("Sun, 24 Jan 2016 20:00:00 GMT"))
+                .withHeader("Snippets-Changes-Since", equalTo(resourceGenerate.aSnippetsLastUpdate()))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody(resourceGenerate.aSnippetCollection().toJson()
                         )));
 
-        SnippetCollection snippets = tagMyCode.fetchSnippetsChanges("Sun, 24 Jan 2016 20:00:00 GMT");
+        SnippetCollection snippets = tagMyCode.fetchSnippetsChanges(resourceGenerate.aSnippetsLastUpdate());
 
         assertEquals(resourceGenerate.aSnippetCollection(), snippets);
         assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", tagMyCode.getLastSnippetUpdate());
