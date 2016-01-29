@@ -76,4 +76,41 @@ public class SnippetCollectionTest extends BaseTest {
         Snippet nonPresentSnippet = new Snippet().setId(555);
         assertNull(snippets.getById(nonPresentSnippet.getId()));
     }
+
+    @Test
+    public void testMergeWithNewSnippetCollection() throws Exception {
+        SnippetCollection snippetsBase = new SnippetCollection();
+        snippetsBase.add(resourceGenerate.aSnippet());
+        SnippetCollection newSnippetCollection = new SnippetCollection();
+        newSnippetCollection.add(resourceGenerate.anotherSnippet());
+        snippetsBase.merge(newSnippetCollection);
+
+        assertEquals(2, snippetsBase.size());
+    }
+
+    @Test
+    public void testMergeWithNewSnippetCollectionWithSameId() throws Exception {
+        SnippetCollection snippetsBase = new SnippetCollection();
+        snippetsBase.add(resourceGenerate.aSnippet());
+        SnippetCollection newSnippetCollection = new SnippetCollection();
+        newSnippetCollection.add(resourceGenerate.aSnippet().setTitle("Changed title"));
+
+        snippetsBase.merge(newSnippetCollection);
+
+        assertEquals(1, snippetsBase.size());
+        assertEquals("Changed title", snippetsBase.getById(resourceGenerate.aSnippet().getId()).getTitle());
+    }
+
+    @Test
+    public void testMergeNoIdWithNewSnippetCollection() throws Exception {
+        SnippetCollection snippetsBase = new SnippetCollection();
+        snippetsBase.add(new Snippet());
+        SnippetCollection newSnippetCollection = new SnippetCollection();
+        newSnippetCollection.add(resourceGenerate.aSnippet());
+
+        snippetsBase.merge(newSnippetCollection);
+
+        assertEquals(2, snippetsBase.size());
+        assertEquals(0, snippetsBase.get(0).getId());
+    }
 }

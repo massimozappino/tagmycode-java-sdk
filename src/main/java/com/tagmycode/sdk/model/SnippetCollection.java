@@ -52,4 +52,14 @@ public class SnippetCollection extends ModelCollection<Snippet> {
         set(i, snippet);
         return snippet;
     }
+
+    public void merge(SnippetCollection newSnippetCollection) {
+        for (Snippet snippet : newSnippetCollection) {
+            Snippet existentSnippet = getById(snippet.getId());
+            if (existentSnippet != null) {
+                remove(existentSnippet);
+            }
+            add(snippet);
+        }
+    }
 }

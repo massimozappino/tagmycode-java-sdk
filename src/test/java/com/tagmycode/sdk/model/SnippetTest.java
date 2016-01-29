@@ -4,7 +4,6 @@ import com.tagmycode.sdk.DateParser;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import support.ModelAbstractBaseTest;
 
@@ -119,10 +118,9 @@ public class SnippetTest extends ModelAbstractBaseTest {
     }
 
     @Test
-    @Ignore
     public void toJsonShouldNotThrowsNPE() throws Exception {
         Snippet snippet = new Snippet();
-
+        assertEquals(new Snippet(), new Snippet());
         assertEquals(new Snippet(), new Snippet(snippet.toJson()));
     }
 
