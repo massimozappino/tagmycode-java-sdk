@@ -86,12 +86,14 @@ public class TagMyCodeTest extends ClientBaseTest {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
+                        .withHeader("Last-Resource-Update", resourceGenerate.aSnippetsLastUpdate())
                         .withBody(resourceGenerate.aSnippetCollection().toJson()
                         )));
 
         SnippetCollection snippets = tagMyCode.fetchSnippetsCollection();
 
         assertEquals(resourceGenerate.aSnippetCollection(), snippets);
+        assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", tagMyCode.getLastSnippetUpdate());
     }
 
     @Test
@@ -101,6 +103,7 @@ public class TagMyCodeTest extends ClientBaseTest {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
+                        .withHeader("Last-Resource-Update", resourceGenerate.aSnippetsLastUpdate())
                         .withBody(resourceGenerate.aSnippetCollection().toJson()
                         )));
 
@@ -154,7 +157,7 @@ public class TagMyCodeTest extends ClientBaseTest {
         assertEquals(null, tagMyCode.getLastSnippetUpdate());
         ClientResponse mock = mock(ClientResponse.class);
         when(mock.getBody()).thenReturn(resourceGenerate.aSnippetCollection().toJson());
-        when(mock.getLastUpdate()).thenReturn("xxx");
+        when(mock.extractLastResourceUpdate()).thenReturn("xxx");
 
         tagMyCode.createSnippetsCollection(mock);
 

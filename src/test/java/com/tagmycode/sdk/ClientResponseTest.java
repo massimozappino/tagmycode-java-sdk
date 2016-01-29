@@ -37,7 +37,7 @@ public class ClientResponseTest extends BaseTest {
     }
 
     @Test
-    public void testGetLastUpdate() {
-        assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", clientResponse.getLastUpdate());
+    public void testExtractLastResourceUpdate() {
+        assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", clientResponse.extractLastResourceUpdate());
     }
 }

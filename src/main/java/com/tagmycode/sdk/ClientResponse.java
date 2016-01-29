@@ -4,6 +4,10 @@ import org.scribe.model.Response;
 
 public class ClientResponse {
 
+    public static final String HEADER_X_RATE_LIMIT_LIMIT = "X-RateLimit-Limit";
+    public static final String HEADER_X_RATE_LIMIT_REMAINING = "X-RateLimit-Remaining";
+    public static final String HEADER_X_RATE_LIMIT_RESET = "X-RateLimit-Reset";
+    public static final String HEADER_LAST_RESOURCE_UPDATE = "Last-Resource-Update";
     private Response response;
     private RateLimit rateLimit;
 
@@ -14,9 +18,9 @@ public class ClientResponse {
 
     private void initRateLimit() {
         try {
-            rateLimit = new RateLimit(Integer.parseInt(response.getHeader("X-RateLimit-Limit")),
-                    Integer.parseInt(response.getHeader("X-RateLimit-Remaining")),
-                    Integer.parseInt(response.getHeader("X-RateLimit-Reset")));
+            rateLimit = new RateLimit(Integer.parseInt(response.getHeader(HEADER_X_RATE_LIMIT_LIMIT)),
+                    Integer.parseInt(response.getHeader(HEADER_X_RATE_LIMIT_REMAINING)),
+                    Integer.parseInt(response.getHeader(HEADER_X_RATE_LIMIT_RESET)));
         } catch (NumberFormatException e) {
             rateLimit = null;
         }
@@ -48,7 +52,7 @@ public class ClientResponse {
         return new ErrorResponse(getBody());
     }
 
-    public String getLastUpdate() {
-        return response.getHeader("Last-Update");
+    public String extractLastResourceUpdate() {
+        return response.getHeader(HEADER_LAST_RESOURCE_UPDATE);
     }
 }

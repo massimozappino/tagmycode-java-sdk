@@ -93,7 +93,7 @@ public class TagMyCode {
     }
 
     protected SnippetCollection createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
-        lastSnippetUpdate = cr.getLastUpdate();
+        lastSnippetUpdate = cr.extractLastResourceUpdate();
         return new SnippetCollection(cr.getBody());
     }
 
