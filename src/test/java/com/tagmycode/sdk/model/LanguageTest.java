@@ -2,9 +2,9 @@ package com.tagmycode.sdk.model;
 
 
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
-import support.ModelAbstractBaseTest;
 import org.json.JSONObject;
 import org.junit.Test;
+import support.ModelAbstractBaseTest;
 
 import java.io.IOException;
 
@@ -36,6 +36,11 @@ public class LanguageTest extends ModelAbstractBaseTest {
         String jsonString = resourceGenerate.getResourceReader().readFile("language.json");
         Language l = new Language(jsonString);
         assertLanguageValues(l, 1);
+    }
+
+    @Test
+    public void twoObjectsAreEquals() {
+        assertEquals(new Language(), new Language());
     }
 
     @Test

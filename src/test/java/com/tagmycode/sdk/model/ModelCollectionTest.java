@@ -1,7 +1,6 @@
 package com.tagmycode.sdk.model;
 
 
-import org.junit.Ignore;
 import org.junit.Test;
 import support.BaseTest;
 
@@ -35,7 +34,6 @@ public class ModelCollectionTest extends BaseTest {
     }
 
     @Test
-    @Ignore
     public void avoidNPE() throws Exception {
         SnippetCollection newSnippetCollection = resourceGenerate.aSnippetCollection();
         newSnippetCollection.add(resourceGenerate.anotherSnippet());

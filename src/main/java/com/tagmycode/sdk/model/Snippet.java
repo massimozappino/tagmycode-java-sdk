@@ -1,6 +1,5 @@
 package com.tagmycode.sdk.model;
 
-import com.tagmycode.sdk.DateParser;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,15 +34,15 @@ public class Snippet extends ModelAbstract {
     protected void extractFields() throws TagMyCodeJsonException {
         try {
             id = getJsonObject().getInt("id");
-            title = getJsonObject().getString("title");
-            code = getJsonObject().getString("code");
-            description = getJsonObject().getString("description");
+            title = jsonToString("title");
+            code = jsonToString("code");
+            description = jsonToString("description");
             language = new Language(getJsonObject().getJSONObject("language"));
-            tags = getJsonObject().getString("tags");
+            tags = jsonToString("tags");
             isPrivate = getJsonObject().getBoolean("is_private");
-            url = getJsonObject().isNull("url") ? null : getJsonObject().getString("url");
-            creationDate = new DateParser().parseDate(getJsonObject().getString("created_at"));
-            updateDate = new DateParser().parseDate(getJsonObject().getString("updated_at"));
+            url = jsonToString("url");
+            creationDate = jsonToDate("created_at");
+            updateDate = jsonToDate("updated_at");
         } catch (JSONException e) {
             throw new TagMyCodeJsonException(e);
         } catch (ParseException e) {
@@ -54,17 +53,16 @@ public class Snippet extends ModelAbstract {
     @Override
     public String toJson() throws JSONException {
         JSONObject jo = new JSONObject();
-        jo.put("id", getId());
-        jo.put("title", getTitle());
-        jo.put("code", getCode());
-        jo.put("description", getDescription());
-        jo.put("language", getLanguage() != null ? new JSONObject(getLanguage().toJson()) : "");
-        jo.put("tags", getTags());
+        jo.put("id", fieldToJson(getId()));
+        jo.put("title", fieldToJson(getTitle()));
+        jo.put("code", fieldToJson(getCode()));
+        jo.put("description", fieldToJson(getDescription()));
+        jo.put("language", new JSONObject(getLanguage().toJson()));
+        jo.put("tags", fieldToJson(getTags()));
         jo.put("is_private", isPrivate());
-        String url = getUrl();
-        jo.put("url", url != null ? url : JSONObject.NULL);
-        jo.put("created_at", new DateParser().toISO8601(getCreationDate()));
-        jo.put("updated_at", new DateParser().toISO8601(getUpdateDate()));
+        jo.put("url", fieldToJson(getUrl()));
+        jo.put("created_at", fieldToJson(getCreationDate()));
+        jo.put("updated_at", fieldToJson(getUpdateDate()));
 
         return jo.toString();
     }

@@ -1,8 +1,12 @@
 package com.tagmycode.sdk.model;
 
+import com.tagmycode.sdk.DateParser;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.util.Date;
 
 abstract public class ModelAbstract implements Comparable<ModelAbstract> {
     private JSONObject jsonObject;
@@ -37,6 +41,39 @@ abstract public class ModelAbstract implements Comparable<ModelAbstract> {
             throw new TagMyCodeJsonException(e);
         }
     }
+
+    protected Object fieldToJson(String field) {
+        return field != null ? field : JSONObject.NULL;
+    }
+
+    protected int fieldToJson(int field) {
+        return field;
+    }
+
+    protected Object fieldToJson(Date date) {
+        Object jsonDate = JSONObject.NULL;
+        if (date != null) {
+            jsonDate = new DateParser().toISO8601(date);
+        }
+        return jsonDate;
+    }
+
+
+    protected String jsonToString(String fieldName) throws JSONException {
+        if (getJsonObject().isNull(fieldName)) {
+            return null;
+        }
+        return getJsonObject().getString(fieldName);
+    }
+
+    protected Date jsonToDate(String fieldName) throws ParseException, JSONException {
+        if (getJsonObject().isNull(fieldName)) {
+            return null;
+        } else {
+            return new DateParser().parseDate(getJsonObject().getString(fieldName));
+        }
+    }
+
 
     public abstract String toJson() throws JSONException;
 

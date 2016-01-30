@@ -91,7 +91,6 @@ public class SnippetTest extends ModelAbstractBaseTest {
         assertFalse(snippet1.equals(snippet2));
     }
 
-
     @Test
     public void newSnippetWithNoLanguage() throws IOException, TagMyCodeJsonException {
         Snippet snippet = new Snippet();
@@ -102,6 +101,8 @@ public class SnippetTest extends ModelAbstractBaseTest {
     @Test
     public void toJson() throws Exception {
         Snippet snippet = new Snippet();
+        assertEquals("{\"tags\":null,\"id\":0,\"title\":null,\"updated_at\":null,\"description\":null,\"created_at\":null,\"is_private\":false,\"language\":{\"id\":1,\"name\":\"Text\",\"code\":\"text\"},\"code\":null,\"url\":null}", snippet.toJson());
+
         snippet.setId(1)
                 .setTitle("My title")
                 .setCode("code\r\nsecond line")
@@ -121,7 +122,7 @@ public class SnippetTest extends ModelAbstractBaseTest {
     public void toJsonShouldNotThrowsNPE() throws Exception {
         Snippet snippet = new Snippet();
         assertEquals(new Snippet(), new Snippet());
-        assertEquals(new Snippet(), new Snippet(snippet.toJson()));
+        assertEquals(new Snippet().toJson(), new Snippet(snippet.toJson()).toJson());
     }
 
     @Test
