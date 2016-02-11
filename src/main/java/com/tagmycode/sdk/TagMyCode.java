@@ -3,10 +3,9 @@ package com.tagmycode.sdk;
 
 import com.tagmycode.sdk.exception.TagMyCodeException;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
-import com.tagmycode.sdk.model.LanguageCollection;
-import com.tagmycode.sdk.model.Snippet;
-import com.tagmycode.sdk.model.SnippetCollection;
-import com.tagmycode.sdk.model.User;
+import com.tagmycode.sdk.model.*;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.scribe.model.Verb;
 
 public class TagMyCode {
@@ -72,6 +71,26 @@ public class TagMyCode {
         ClientResponse cr = client.sendRequest("snippets", Verb.GET, new ParamList(), headers);
 
         return createSnippetsCollection(cr);
+    }
+
+    public SnippetsDeletions fetchDeletions(String gmtDate) throws TagMyCodeException {
+        ParamList headers = new ParamList();
+        headers.add("Snippets-Changes-Since", gmtDate);
+        ParamList params = new ParamList();
+        params.add("deletions", "true");
+        ClientResponse cr = client.sendRequest("snippets", Verb.GET, params, headers);
+
+        SnippetsDeletions deletions = new SnippetsDeletions();
+        try {
+            JSONArray jsonArray = new JSONArray(cr.getBody());
+            for (int i = 0; i < jsonArray.length(); i++) {
+                deletions.add(jsonArray.getInt(i));
+            }
+        } catch (JSONException e) {
+            throw new TagMyCodeException(e);
+        }
+
+        return deletions;
     }
 
     public void deleteSnippet(int snippetId) throws TagMyCodeException {

@@ -62,4 +62,10 @@ public class SnippetCollection extends ModelCollection<Snippet> {
             add(snippet);
         }
     }
+
+    public void deleteByDeletions(SnippetsDeletions deletions) {
+        for (int id : deletions) {
+            deleteById(id);
+        }
+    }
 }

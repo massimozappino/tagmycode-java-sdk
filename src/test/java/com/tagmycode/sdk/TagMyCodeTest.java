@@ -104,13 +104,35 @@ public class TagMyCodeTest extends ClientBaseTest {
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withHeader("Last-Resource-Update", resourceGenerate.aSnippetsLastUpdate())
-                        .withBody(resourceGenerate.aSnippetCollection().toJson()
-                        )));
+                        .withBody(resourceGenerate.aSnippetCollection().toJson())
+                ));
 
         SnippetCollection snippets = tagMyCode.fetchSnippetsChanges(resourceGenerate.aSnippetsLastUpdate());
 
         assertEquals(resourceGenerate.aSnippetCollection(), snippets);
         assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", tagMyCode.getLastSnippetUpdate());
+    }
+
+
+    @Test
+    public void fetchDeletions() throws Exception {
+        stubFor(get(urlMatching("/snippets.*deletions=true.*"))
+                .withHeader("Snippets-Changes-Since", equalTo(resourceGenerate.aSnippetsLastUpdate()))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Last-Resource-Update", resourceGenerate.aSnippetsLastUpdate())
+                        .withBody("[\"2\",\"5\",\"9\"]")
+                ));
+
+        SnippetsDeletions deletions = tagMyCode.fetchDeletions(resourceGenerate.aSnippetsLastUpdate());
+
+        SnippetsDeletions expected = new SnippetsDeletions();
+        expected.add(2);
+        expected.add(5);
+        expected.add(9);
+
+        assertEquals(expected, deletions);
     }
 
     @Test
@@ -183,8 +205,8 @@ public class TagMyCodeTest extends ClientBaseTest {
     public void updateSnippetWithoutSuccess() throws Exception {
         stubFor(put(urlMatching("/snippets/1.*"))
                 .willReturn(aResponse()
-                                .withStatus(404)
-                                .withHeader("Content-Type", "application/json")
+                        .withStatus(404)
+                        .withHeader("Content-Type", "application/json")
                 ));
 
         try {
@@ -199,8 +221,8 @@ public class TagMyCodeTest extends ClientBaseTest {
     public void deleteSnippetWithSuccess() throws Exception {
         stubFor(delete(urlMatching("/snippets/1.*"))
                 .willReturn(aResponse()
-                                .withStatus(204)
-                                .withHeader("Content-Type", "application/json")
+                        .withStatus(204)
+                        .withHeader("Content-Type", "application/json")
                 ));
 
 
@@ -213,8 +235,8 @@ public class TagMyCodeTest extends ClientBaseTest {
     public void deleteSnippetWithNoSuccess() throws Exception {
         stubFor(delete(urlMatching("/snippets.*"))
                 .willReturn(aResponse()
-                                .withStatus(404)
-                                .withHeader("Content-Type", "application/json")
+                        .withStatus(404)
+                        .withHeader("Content-Type", "application/json")
                 ));
 
         try {

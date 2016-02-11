@@ -5,8 +5,7 @@ import org.junit.Test;
 import support.BaseTest;
 import support.ResourceGenerate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class SnippetCollectionTest extends BaseTest {
 
@@ -28,7 +27,7 @@ public class SnippetCollectionTest extends BaseTest {
     @Test
     public void testDeleteSnippetById() throws Exception {
         boolean isDeleted;
-        SnippetCollection snippetCollection = new SnippetCollection(new ResourceGenerate().aSnippetCollection().toJson());
+        SnippetCollection snippetCollection = new SnippetCollection(resourceGenerate.aSnippetCollection().toJson());
         assertEquals(2, snippetCollection.size());
 
         isDeleted = snippetCollection.deleteById(999);
@@ -38,6 +37,28 @@ public class SnippetCollectionTest extends BaseTest {
         isDeleted = snippetCollection.deleteById(1);
         assertEquals(true, isDeleted);
         assertEquals(1, snippetCollection.size());
+    }
+
+    @Test
+    public void testDeleteSnippetsBySnippetsDeletions() throws Exception {
+        SnippetCollection snippetCollection = new SnippetCollection();
+        snippetCollection.add(new Snippet().setId(1));
+        snippetCollection.add(new Snippet().setId(2));
+        snippetCollection.add(new Snippet().setId(3));
+        snippetCollection.add(new Snippet().setId(4));
+        snippetCollection.add(new Snippet().setId(5));
+
+        SnippetsDeletions deletions = new SnippetsDeletions();
+        deletions.add(2);
+        deletions.add(4);
+
+        snippetCollection.deleteByDeletions(deletions);
+        assertEquals(3, snippetCollection.size());
+        assertNotNull(snippetCollection.getById(1));
+        assertNull(snippetCollection.getById(2));
+        assertNotNull(snippetCollection.getById(3));
+        assertNull(snippetCollection.getById(4));
+        assertNotNull(snippetCollection.getById(5));
     }
 
     @Test

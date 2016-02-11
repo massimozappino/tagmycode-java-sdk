@@ -16,8 +16,7 @@ public class SnippetTest extends ModelAbstractBaseTest {
 
     @Test
     public void newSnippet() {
-        Snippet s = new Snippet();
-        assertEquals(0, s.getId());
+        assertEquals(0, new Snippet().getId());
     }
 
     @Test
@@ -35,8 +34,7 @@ public class SnippetTest extends ModelAbstractBaseTest {
                 .put("url", "https://tagmycode.com/snippet/1")
                 .put("created_at", "2010-11-22T13:11:25+00:00")
                 .put("updated_at", "2010-11-22T13:11:25+00:00");
-        Snippet s = new Snippet(jsonObject);
-        assertSnippetValues(s, 1);
+        assertSnippetValues(new Snippet(jsonObject), 1);
     }
 
     @Test
@@ -51,8 +49,7 @@ public class SnippetTest extends ModelAbstractBaseTest {
     @Test
     public void newModelWithJsonString() throws Exception {
         String jsonString = resourceGenerate.getResourceReader().readFile("snippet.json");
-        Snippet s = new Snippet(jsonString);
-        assertSnippetValues(s, 1);
+        assertSnippetValues(new Snippet(jsonString), 1);
     }
 
     @Test
