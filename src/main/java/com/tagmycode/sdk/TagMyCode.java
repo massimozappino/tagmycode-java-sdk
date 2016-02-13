@@ -119,4 +119,9 @@ public class TagMyCode {
     public String getLastSnippetUpdate() {
         return lastSnippetUpdate;
     }
+
+    public void syncSnippets(SnippetCollection localSnippets, SnippetsDeletions localDeletions, SnippetCollection remoteSnippets, SnippetsDeletions remoteDeletions) {
+        localSnippets.merge(remoteSnippets);
+        localSnippets.deleteByDeletions(remoteDeletions);
+    }
 }

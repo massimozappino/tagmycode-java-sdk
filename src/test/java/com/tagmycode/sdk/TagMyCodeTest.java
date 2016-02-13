@@ -246,4 +246,48 @@ public class TagMyCodeTest extends ClientBaseTest {
             verify(deleteRequestedFor(urlMatching("/snippets/1?.*")));
         }
     }
+
+    @Test
+    public void testSync() throws Exception {
+        //local: 1,3,4,5,N
+        //local_del: 2
+        //remote: 1,2,3,4,5,6
+        //remote_del: 3
+
+        //local: 1,4,5,6,7
+        //remote: 1,4,5,6,7
+
+
+        SnippetCollection localSnippets = new SnippetCollection();
+        localSnippets.add(resourceGenerate.aSnippet().setId(1));
+        localSnippets.add(resourceGenerate.aSnippet().setId(3));
+        localSnippets.add(resourceGenerate.aSnippet().setId(4));
+        localSnippets.add(resourceGenerate.aSnippet().setId(5));
+        localSnippets.add(resourceGenerate.aSnippet().setId(0));
+
+        SnippetCollection remoteSnippets = resourceGenerate.aSnippetCollection();
+        remoteSnippets.add(resourceGenerate.aSnippet().setId(1));
+        remoteSnippets.add(resourceGenerate.aSnippet().setId(2));
+        remoteSnippets.add(resourceGenerate.aSnippet().setId(3));
+        remoteSnippets.add(resourceGenerate.aSnippet().setId(4));
+        remoteSnippets.add(resourceGenerate.aSnippet().setId(5));
+        remoteSnippets.add(resourceGenerate.aSnippet().setId(6));
+
+        SnippetsDeletions localDeletions = new SnippetsDeletions();
+        localDeletions.add(2);
+        SnippetsDeletions remoteDeletions = new SnippetsDeletions();
+        remoteDeletions.add(3);
+
+        tagMyCode.syncSnippets(localSnippets, localDeletions, remoteSnippets, remoteDeletions);
+
+        assertNotNull(localSnippets.getById(1));
+        assertNull(localSnippets.getById(2));
+        assertNull(localSnippets.getById(3));
+        assertNotNull(localSnippets.getById(4));
+        assertNotNull(localSnippets.getById(5));
+        assertNotNull(localSnippets.getById(6));
+        assertNotNull(localSnippets.getById(7));
+        assertEquals(5, localSnippets.size());
+
+    }
 }
