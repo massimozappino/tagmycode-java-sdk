@@ -93,7 +93,7 @@ public class TagMyCodeTest extends ClientBaseTest {
         SnippetCollection snippets = tagMyCode.fetchSnippetsCollection();
 
         assertEquals(resourceGenerate.aSnippetCollection(), snippets);
-        assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", tagMyCode.getLastSnippetUpdate());
+        assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", tagMyCode.getLastSnippetsUpdate());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class TagMyCodeTest extends ClientBaseTest {
         SnippetCollection snippets = tagMyCode.fetchSnippetsChanges(resourceGenerate.aSnippetsLastUpdate());
 
         assertEquals(resourceGenerate.aSnippetCollection(), snippets);
-        assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", tagMyCode.getLastSnippetUpdate());
+        assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", tagMyCode.getLastSnippetsUpdate());
     }
 
 
@@ -176,14 +176,14 @@ public class TagMyCodeTest extends ClientBaseTest {
 
     @Test
     public void createSnippetsCollection() throws Exception {
-        assertEquals(null, tagMyCode.getLastSnippetUpdate());
+        assertEquals(null, tagMyCode.getLastSnippetsUpdate());
         ClientResponse mock = mock(ClientResponse.class);
         when(mock.getBody()).thenReturn(resourceGenerate.aSnippetCollection().toJson());
         when(mock.extractLastResourceUpdate()).thenReturn("xxx");
 
         tagMyCode.createSnippetsCollection(mock);
 
-        assertEquals("xxx", tagMyCode.getLastSnippetUpdate());
+        assertEquals("xxx", tagMyCode.getLastSnippetsUpdate());
     }
 
 
@@ -249,14 +249,12 @@ public class TagMyCodeTest extends ClientBaseTest {
 
     @Test
     public void testSync() throws Exception {
-        //local: 1,3,4,5,N
-        //local_del: 2
-        //remote: 1,2,3,4,5,6
-        //remote_del: 3
+        final SnippetCollection changedSnippets = resourceGenerate.aSnippetCollection();
+        changedSnippets.add(resourceGenerate.aSnippet().setId(5).setTitle("changed title"));
+        changedSnippets.add(resourceGenerate.aSnippet().setId(6));
 
-        //local: 1,4,5,6,7
-        //remote: 1,4,5,6,7
-
+        final SnippetsDeletions remoteDeletions = new SnippetsDeletions();
+        remoteDeletions.add(3);
 
         SnippetCollection localSnippets = new SnippetCollection();
         localSnippets.add(resourceGenerate.aSnippet().setId(1));
@@ -265,26 +263,36 @@ public class TagMyCodeTest extends ClientBaseTest {
         localSnippets.add(resourceGenerate.aSnippet().setId(5));
         localSnippets.add(resourceGenerate.aSnippet().setId(0));
 
-        SnippetCollection remoteSnippets = resourceGenerate.aSnippetCollection();
-        remoteSnippets.add(resourceGenerate.aSnippet().setId(1));
-        remoteSnippets.add(resourceGenerate.aSnippet().setId(2));
-        remoteSnippets.add(resourceGenerate.aSnippet().setId(3));
-        remoteSnippets.add(resourceGenerate.aSnippet().setId(4));
-        remoteSnippets.add(resourceGenerate.aSnippet().setId(5));
-        remoteSnippets.add(resourceGenerate.aSnippet().setId(6));
-
         SnippetsDeletions localDeletions = new SnippetsDeletions();
         localDeletions.add(2);
-        SnippetsDeletions remoteDeletions = new SnippetsDeletions();
-        remoteDeletions.add(3);
 
-        tagMyCode.syncSnippets(localSnippets, localDeletions, remoteSnippets, remoteDeletions);
+        tagMyCode = new TagMyCode(client) {
+            public SnippetCollection fetchSnippetsChanges(String gmtDate) throws TagMyCodeException {
+                return changedSnippets;
+            }
+
+            public SnippetsDeletions fetchDeletions(String gmtDate) throws TagMyCodeException {
+                return remoteDeletions;
+            }
+
+            public Snippet createSnippet(Snippet inputSnippet) throws TagMyCodeException {
+                Snippet snippet = null;
+                try {
+                    snippet = resourceGenerate.aSnippet().setId(7);
+                } catch (Exception ignored) {
+                }
+                return snippet;
+            }
+        };
+
+        tagMyCode.syncSnippets(localSnippets, localDeletions);
 
         assertNotNull(localSnippets.getById(1));
         assertNull(localSnippets.getById(2));
         assertNull(localSnippets.getById(3));
         assertNotNull(localSnippets.getById(4));
         assertNotNull(localSnippets.getById(5));
+        assertEquals("changed title", localSnippets.getById(5).getTitle());
         assertNotNull(localSnippets.getById(6));
         assertNotNull(localSnippets.getById(7));
         assertEquals(5, localSnippets.size());

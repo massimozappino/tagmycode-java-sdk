@@ -8,9 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.scribe.model.Verb;
 
+import java.util.ArrayList;
+
 public class TagMyCode {
     private final Client client;
-    private String lastSnippetUpdate;
+    private String lastSnippetsUpdate;
 
     public TagMyCode(Client client) {
         this.client = client;
@@ -112,16 +114,42 @@ public class TagMyCode {
     }
 
     protected SnippetCollection createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
-        lastSnippetUpdate = cr.extractLastResourceUpdate();
+        lastSnippetsUpdate = cr.extractLastResourceUpdate();
         return new SnippetCollection(cr.getBody());
     }
 
-    public String getLastSnippetUpdate() {
-        return lastSnippetUpdate;
+    public String getLastSnippetsUpdate() {
+        return lastSnippetsUpdate;
     }
 
-    public void syncSnippets(SnippetCollection localSnippets, SnippetsDeletions localDeletions, SnippetCollection remoteSnippets, SnippetsDeletions remoteDeletions) {
+    public void setLastSnippetsUpdate(String lastSnippetsUpdate) {
+        this.lastSnippetsUpdate = lastSnippetsUpdate;
+    }
+
+    public void syncSnippets(SnippetCollection localSnippets, SnippetsDeletions localDeletions) throws TagMyCodeException {
+        SnippetCollection remoteSnippets = fetchSnippetsChanges(lastSnippetsUpdate);
+        SnippetsDeletions remoteDeletions = fetchDeletions(lastSnippetsUpdate);
+
         localSnippets.merge(remoteSnippets);
         localSnippets.deleteByDeletions(remoteDeletions);
+        localSnippets.deleteByDeletions(localDeletions);
+
+        ArrayList<Snippet> snippetsToAdd = new ArrayList<Snippet>();
+        ArrayList<Snippet> snippetsToDelete = new ArrayList<Snippet>();
+
+        for (Snippet snippet : localSnippets) {
+            if (snippet.getId() == 0) {
+                snippetsToAdd.add(createSnippet(snippet));
+                snippetsToDelete.add(snippet);
+            }
+        }
+
+        for (Snippet snippet : snippetsToAdd) {
+            localSnippets.add(snippet);
+        }
+
+        for (Snippet snippet : snippetsToDelete) {
+            localSnippets.remove(snippet);
+        }
     }
 }
