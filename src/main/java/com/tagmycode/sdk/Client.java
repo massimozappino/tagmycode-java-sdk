@@ -15,12 +15,14 @@ import org.scribe.model.Verifier;
 import java.util.Map;
 
 public class Client {
-    public String endpointUrl;
+    private String endpointUrl;
     private TagMyCodeServiceImpl service;
     private OauthToken oauthToken;
+    private TagMyCodeApi tagmycodeApi;
     private IOauthWallet wallet;
 
     public Client(TagMyCodeApi tagmycodeApi, String key, String secret, IOauthWallet wallet) {
+        this.tagmycodeApi = tagmycodeApi;
         this.wallet = wallet;
         if (tagmycodeApi.isSsl()) {
             new Ssl().disableSslVerification();
@@ -162,4 +164,7 @@ public class Client {
         setOauthToken(null);
     }
 
+    public TagMyCodeApi getTagmycodeApi() {
+        return tagmycodeApi;
+    }
 }

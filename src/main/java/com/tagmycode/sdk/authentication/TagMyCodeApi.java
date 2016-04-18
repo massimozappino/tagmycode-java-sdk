@@ -12,9 +12,15 @@ import java.security.SecureRandom;
 
 public abstract class TagMyCodeApi extends DefaultApi20 {
 
-    public abstract String getEndpointUrl();
+    public abstract String getDomain();
 
-    public abstract String getOauthBaseUrl();
+    public String getEndpointUrl() {
+        return "https://api." + getDomain();
+    }
+
+    public String getOauthBaseUrl() {
+        return "https://" + getDomain();
+    }
 
     public boolean isSsl() {
         return true;

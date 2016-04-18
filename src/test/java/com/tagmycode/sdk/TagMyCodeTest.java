@@ -13,11 +13,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class TagMyCodeTest extends ClientBaseTest {
-    TagMyCode tagMyCode;
+    private TagMyCode tagMyCode;
 
     @Before
     public void initTagMyCodeObject() {
         tagMyCode = new TagMyCode(client);
+    }
+
+
+    @Test
+    public void isServiceAvailable() throws Exception {
+        tagMyCode = new TagMyCode(getProductionClient());
+        assertTrue(tagMyCode.isServiceAvailable());
     }
 
     @Test

@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.scribe.model.Verb;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class TagMyCode {
@@ -16,6 +18,20 @@ public class TagMyCode {
 
     public TagMyCode(Client client) {
         this.client = client;
+    }
+
+    public boolean isServiceAvailable() {
+        String domain = client.getTagmycodeApi().getDomain();
+
+        try {
+            Socket socket = new Socket(domain, 80);
+            boolean isConnected = socket.isConnected();
+            socket.close();
+            return isConnected;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public Client getClient() {
