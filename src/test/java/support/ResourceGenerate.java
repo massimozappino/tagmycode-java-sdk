@@ -1,6 +1,7 @@
 package support;
 
 
+import com.tagmycode.sdk.ResourceReader;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import com.tagmycode.sdk.model.*;
 
