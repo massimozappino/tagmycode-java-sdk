@@ -2,9 +2,11 @@ package com.tagmycode.sdk.model;
 
 import com.tagmycode.sdk.DateParser;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import support.ModelAbstractBaseTest;
 
 import java.io.IOException;
@@ -98,7 +100,8 @@ public class SnippetTest extends ModelAbstractBaseTest {
     @Test
     public void toJson() throws Exception {
         Snippet snippet = new Snippet();
-        assertEquals("{\"tags\":null,\"id\":0,\"title\":null,\"updated_at\":null,\"description\":null,\"created_at\":null,\"is_private\":false,\"language\":{\"id\":1,\"name\":\"Text\",\"code\":\"text\"},\"code\":null,\"url\":null}", snippet.toJson());
+        String expectedJson = "{\"tags\":null,\"id\":0,\"title\":null,\"updated_at\":null,\"description\":null,\"created_at\":null,\"is_private\":false,\"language\":{\"id\":1,\"name\":\"Text\",\"code\":\"text\"},\"code\":null,\"url\":null}";
+        JSONAssert.assertEquals(expectedJson, snippet.toJson(), false);
 
         snippet.setId(1)
                 .setTitle("My title")
