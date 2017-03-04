@@ -1,12 +1,17 @@
 package com.tagmycode.sdk.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+@DatabaseTable(tableName = "languages")
 public class Language extends ModelAbstract {
+    @DatabaseField(id = true)
     private int id;
+    @DatabaseField
     private String name;
+    @DatabaseField()
     private String code;
 
     public Language(JSONObject jsonObject) throws TagMyCodeJsonException {

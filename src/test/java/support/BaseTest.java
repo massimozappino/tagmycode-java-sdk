@@ -1,7 +1,11 @@
 package support;
 
+import com.tagmycode.sdk.StorageService;
 import org.junit.Before;
 import org.scribe.model.Response;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -26,5 +30,12 @@ public abstract class BaseTest {
         when(response.getHeader("Last-Resource-Update")).thenReturn("Sun, 24 Jan 2016 20:00:00 GMT");
 
         return response;
+    }
+
+    public StorageService initializeInMemoryStorage() throws SQLException, IOException {
+        StorageService storageService = new StorageService();
+        storageService.initialize("mem:test");
+
+        return storageService;
     }
 }

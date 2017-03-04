@@ -29,7 +29,6 @@ public class LanguageTest extends ModelAbstractBaseTest {
         assertLanguageValues(l, 1);
     }
 
-
     @Override
     @Test
     public void newModelWithJsonString() throws IOException, TagMyCodeJsonException {

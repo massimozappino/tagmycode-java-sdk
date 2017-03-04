@@ -1,5 +1,8 @@
 package com.tagmycode.sdk.model;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,16 +10,27 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.util.Date;
 
+@DatabaseTable(tableName = "snippets")
 public class Snippet extends ModelAbstract {
-    private String title;
-    private String code;
-    private String description;
+    @DatabaseField(id = true)
     private int id;
+    @DatabaseField
+    private String title;
+    @DatabaseField(dataType = DataType.LONG_STRING)
+    private String code;
+    @DatabaseField(dataType = DataType.LONG_STRING)
+    private String description;
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Language language;
+    @DatabaseField
     private Date creationDate;
+    @DatabaseField
     private Date updateDate;
+    @DatabaseField
     private String tags;
+    @DatabaseField
     private boolean isPrivate;
+    @DatabaseField
     private String url;
 
     public Snippet() {

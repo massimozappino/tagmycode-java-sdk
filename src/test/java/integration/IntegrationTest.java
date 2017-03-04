@@ -1,6 +1,8 @@
-package com.tagmycode.sdk;
+package integration;
 
 
+import com.tagmycode.sdk.Client;
+import com.tagmycode.sdk.TagMyCode;
 import com.tagmycode.sdk.authentication.OauthToken;
 import com.tagmycode.sdk.authentication.TagMyCodeApiProduction;
 import com.tagmycode.sdk.model.LanguageCollection;
