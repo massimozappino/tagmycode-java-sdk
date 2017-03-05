@@ -15,9 +15,7 @@ import support.VoidOauthWallet;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 
 public class ClientTest extends ClientBaseTest {
 
@@ -70,10 +68,16 @@ public class ClientTest extends ClientBaseTest {
 
     @Test
     public void revokeAccess() throws TagMyCodeException {
-        client.setOauthToken(new OauthToken("1", "2"));
-        assertNotNull(client.getOauthToken());
+        IOauthWallet wallet = createWallet();
+        client.setWallet(wallet);
+
+        OauthToken oauthToken = new OauthToken("1", "2");
+        client.setOauthToken(oauthToken);
+
+        assertSame(oauthToken, client.getOauthToken());
         client.revokeAccess();
         assertTrue(client.getOauthToken() instanceof VoidOauthToken);
+        Mockito.verify(wallet, times(1)).deleteOauthToken();
     }
 
     @Test
@@ -232,13 +236,13 @@ public class ClientTest extends ClientBaseTest {
         }
     }
 
-
     @Test
     public void walletInvokedOnSetOauthToken() throws TagMyCodeException {
         Client clientSpy = spy(client);
         IOauthWallet walletMock = mock(IOauthWallet.class);
         clientSpy.setWallet(walletMock);
         OauthToken oauthToken = new OauthToken("123456", "123456");
+
         clientSpy.setOauthToken(oauthToken);
 
         Mockito.verify(walletMock, times(1)).saveOauthToken(oauthToken);
@@ -249,9 +253,32 @@ public class ClientTest extends ClientBaseTest {
         Client clientSpy = spy(client);
         IOauthWallet walletMock = mock(IOauthWallet.class);
         clientSpy.setWallet(walletMock);
+
         clientSpy.setOauthToken(null);
 
         Mockito.verify(walletMock, times(0)).saveOauthToken(null);
+    }
+
+    @Test
+    public void getWallet() throws Exception {
+        assertSame(wallet, client.getWallet());
+    }
+
+    @Test
+    public void loadAccessToken() throws Exception {
+        IOauthWallet iOauthWallet = createWallet();
+
+        OauthToken dummyOauthToken = new VoidOauthToken();
+        when(iOauthWallet.loadOauthToken()).thenReturn(dummyOauthToken);
+
+        client.setWallet(iOauthWallet);
+        Client spyClient = spy(client);
+
+        OauthToken loadedToken = spyClient.loadOauthToken();
+
+        assertEquals(dummyOauthToken, loadedToken);
+        Mockito.verify(iOauthWallet, times(1)).loadOauthToken();
+        Mockito.verify(spyClient, times(1)).setOauthToken(dummyOauthToken);
     }
 
     protected void createStubForOauth(String accessTokenString, String refreshTokenString) {

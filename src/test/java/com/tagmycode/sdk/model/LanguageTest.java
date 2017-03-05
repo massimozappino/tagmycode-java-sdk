@@ -34,7 +34,7 @@ public class LanguageTest extends ModelAbstractBaseTest {
     public void newModelWithJsonString() throws IOException, TagMyCodeJsonException {
         String jsonString = resourceGenerate.getResourceReader().readFile("language.json");
         Language l = new Language(jsonString);
-        assertLanguageValues(l, 1);
+        assertLanguageValues(l, 2);
     }
 
     @Test
@@ -68,7 +68,7 @@ public class LanguageTest extends ModelAbstractBaseTest {
     @Test
     public void toJson() throws Exception {
         Language language = new Language();
-        language.setId(1);
+        language.setId(2);
         language.setName("Java");
         language.setCode("java");
         assertTrue(language.equals(resourceGenerate.aLanguage()));

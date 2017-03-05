@@ -1,8 +1,10 @@
 package com.tagmycode.sdk;
 
 
+import com.tagmycode.sdk.authentication.OauthToken;
 import com.tagmycode.sdk.exception.TagMyCodeException;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
+import com.tagmycode.sdk.exception.TagMyCodeUnauthorizedException;
 import com.tagmycode.sdk.model.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,10 +34,6 @@ public class TagMyCode {
             e.printStackTrace();
             return false;
         }
-    }
-
-    public Client getClient() {
-        return client;
     }
 
     public User fetchAccount() throws TagMyCodeException {
@@ -170,4 +168,28 @@ public class TagMyCode {
             localSnippets.remove(snippet);
         }
     }
+
+    public OauthToken loadOauthToken() throws TagMyCodeException {
+        return client.loadOauthToken();
+    }
+
+    public void revokeAccessToken() throws TagMyCodeException {
+        client.revokeAccess();
+    }
+
+    public boolean isAuthenticated() {
+        return client.isAuthenticated();
+    }
+
+    public void authenticate(String verificationCode) throws TagMyCodeException {
+        client.fetchOauthToken(verificationCode);
+        if (!client.isAuthenticated()) {
+            throw new TagMyCodeUnauthorizedException();
+        }
+    }
+
+    public String getAuthorizationUrl() {
+        return client.getAuthorizationUrl();
+    }
+
 }

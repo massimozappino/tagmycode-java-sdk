@@ -12,15 +12,17 @@ public abstract class ClientBaseTest extends BaseTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(7777);
     protected Client client;
+    protected VoidOauthWallet wallet;
 
     @Before
     public void configureClient() throws TagMyCodeException {
-        client = new Client(new TagMyCodeApiStub(), "key", "secret", new VoidOauthWallet());
+        wallet = new VoidOauthWallet();
+        client = new Client(new TagMyCodeApiStub(), "key", "secret", wallet);
         client.setOauthToken(new OauthToken("xxx", "yyy"));
     }
 
-    protected Client getProductionClient() {
+    protected Client createProductionClient() {
         return new Client(new TagMyCodeApiProduction(), "key", "secret", new VoidOauthWallet());
-
     }
+
 }

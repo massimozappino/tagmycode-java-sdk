@@ -1,15 +1,19 @@
 package com.tagmycode.sdk;
 
+import com.tagmycode.sdk.authentication.OauthToken;
+import com.tagmycode.sdk.authentication.VoidOauthToken;
 import com.tagmycode.sdk.exception.TagMyCodeApiException;
 import com.tagmycode.sdk.exception.TagMyCodeException;
 import com.tagmycode.sdk.model.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import support.ClientBaseTest;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 public class TagMyCodeTest extends ClientBaseTest {
@@ -20,16 +24,10 @@ public class TagMyCodeTest extends ClientBaseTest {
         tagMyCode = new TagMyCode(client);
     }
 
-
     @Test
     public void isServiceAvailable() throws Exception {
-        tagMyCode = new TagMyCode(getProductionClient());
+        tagMyCode = new TagMyCode(createProductionClient());
         assertTrue(tagMyCode.isServiceAvailable());
-    }
-
-    @Test
-    public void getClient() throws Exception {
-        assertEquals(client, tagMyCode.getClient());
     }
 
     @Test
@@ -303,6 +301,66 @@ public class TagMyCodeTest extends ClientBaseTest {
         assertNotNull(localSnippets.getById(6));
         assertNotNull(localSnippets.getById(7));
         assertEquals(5, localSnippets.size());
-
     }
+
+    @Test
+    public void loadAccessToken() throws Exception {
+        Client clientMock = mock(Client.class);
+        tagMyCode = new TagMyCode(clientMock);
+
+        OauthToken dummyOauthToken = new VoidOauthToken();
+        when(clientMock.loadOauthToken()).thenReturn(dummyOauthToken);
+
+        assertEquals(dummyOauthToken, tagMyCode.loadOauthToken());
+        Mockito.verify(clientMock, times(1)).loadOauthToken();
+    }
+
+    @Test
+    public void revokeAccessToken() throws Exception {
+        Client clientMock = mock(Client.class);
+        tagMyCode = new TagMyCode(clientMock);
+
+        tagMyCode.revokeAccessToken();
+
+        Mockito.verify(clientMock, times(1)).revokeAccess();
+    }
+
+    @Test
+    public void isAuthenticated() throws Exception {
+        Client clientMock = mock(Client.class);
+        when(clientMock.isAuthenticated()).thenReturn(true);
+
+        tagMyCode = new TagMyCode(clientMock);
+
+        boolean authenticated = tagMyCode.isAuthenticated();
+
+        Mockito.verify(clientMock, times(1)).isAuthenticated();
+        assertTrue(authenticated);
+    }
+    @Test
+    public void authenticate() throws Exception {
+        Client clientMock = mock(Client.class);
+        when(clientMock.isAuthenticated()).thenReturn(true);
+        String verificationCode = "123";
+
+        tagMyCode = new TagMyCode(clientMock);
+
+        tagMyCode.authenticate(verificationCode);
+
+        Mockito.verify(clientMock, times(1)).fetchOauthToken(verificationCode);
+    }
+
+    @Test
+    public void getAuthorizationUrl() throws Exception {
+        Client clientMock = mock(Client.class);
+        String actualUrl = "http://ok";
+        when(clientMock.getAuthorizationUrl()).thenReturn(actualUrl);
+        tagMyCode = new TagMyCode(clientMock);
+
+        String givenUrl = tagMyCode.getAuthorizationUrl();
+
+        Mockito.verify(clientMock, times(1)).getAuthorizationUrl();
+        assertEquals(givenUrl, actualUrl);
+    }
+
 }

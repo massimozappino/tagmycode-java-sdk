@@ -50,10 +50,6 @@ public class Client {
         this(secret.getConsumerId(), secret.getConsumerSecret(), wallet);
     }
 
-    public void setWallet(IOauthWallet wallet) {
-        this.wallet = wallet;
-    }
-
     public void fetchOauthToken(String verificationCode) throws TagMyCodeException {
         Verifier verifier = new Verifier(verificationCode);
         try {
@@ -91,7 +87,8 @@ public class Client {
     private boolean isTokenValid(OauthToken token) {
         return (token != null)
                 && !(token instanceof VoidOauthToken)
-                && ((token.getAccessToken().getToken().length() != 0) || (token.getRefreshToken().getToken().length() != 0));
+                && ((token.getAccessToken().getToken().length() != 0)
+                || (token.getRefreshToken().getToken().length() != 0));
     }
 
     public ClientResponse sendRequest(String uri, Verb verb) throws TagMyCodeException {
@@ -160,11 +157,26 @@ public class Client {
         return isTokenValid(getOauthToken());
     }
 
-    public void revokeAccess() throws TagMyCodeException {
-        setOauthToken(null);
-    }
-
     public TagMyCodeApi getTagmycodeApi() {
         return tagmycodeApi;
+    }
+
+    public IOauthWallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(IOauthWallet wallet) {
+        this.wallet = wallet;
+    }
+
+    public OauthToken loadOauthToken() throws TagMyCodeException {
+        OauthToken oauthToken = wallet.loadOauthToken();
+        setOauthToken(oauthToken);
+        return oauthToken;
+    }
+
+    public void revokeAccess() throws TagMyCodeException {
+        setOauthToken(null);
+        wallet.deleteOauthToken();
     }
 }

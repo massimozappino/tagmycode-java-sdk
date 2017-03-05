@@ -11,23 +11,48 @@ import com.tagmycode.sdk.model.Snippet;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class StorageService {
+public class DbService {
 
     private JdbcConnectionSource jdbcConnectionSource;
     private Dao<Language, String> languageDao;
     private Dao<Snippet, String> snippetDao;
+    private String dbPath;
+    private Class[] tableClasses = {Language.class, Snippet.class};
 
-    public void initialize(String dbPath) throws SQLException {
+    public DbService(String dbPath) {
+        this.dbPath = dbPath;
+    }
+
+    public void initialize() throws SQLException {
         String databaseUrl = "jdbc:h2:" + dbPath;
         jdbcConnectionSource = new JdbcConnectionSource(databaseUrl);
         languageDao = createDao(Language.class);
         snippetDao = createDao(Snippet.class);
-        createTableIfNotExists(Language.class);
-        createTableIfNotExists(Snippet.class);
+        createAllTables();
     }
 
-    public void createTableIfNotExists(Class aClass) throws SQLException {
-        TableUtils.createTableIfNotExists(jdbcConnectionSource, aClass);
+    public Class[] getTableClasses() {
+        return tableClasses;
+    }
+
+    protected void createAllTables() throws SQLException {
+        for (Class aClass : tableClasses) {
+            createTableIfNotExists(aClass);
+        }
+    }
+
+    public void clearAllTables() throws SQLException {
+        for (Class aClass : tableClasses) {
+            clearTable(aClass);
+        }
+    }
+
+    protected void createTableIfNotExists(Class dataClass) throws SQLException {
+        TableUtils.createTableIfNotExists(jdbcConnectionSource, dataClass);
+    }
+
+    protected void clearTable(Class dataClass) throws SQLException {
+        TableUtils.clearTable(jdbcConnectionSource, dataClass);
     }
 
     public Dao<Language, String> languageDao() {
