@@ -25,12 +25,6 @@ public class TagMyCodeTest extends ClientBaseTest {
     }
 
     @Test
-    public void isServiceAvailable() throws Exception {
-        tagMyCode = new TagMyCode(createProductionClient());
-        assertTrue(tagMyCode.isServiceAvailable());
-    }
-
-    @Test
     public void fetchAccount() throws Exception {
         stubFor(get(urlMatching("/account.*"))
                 .willReturn(aResponse()

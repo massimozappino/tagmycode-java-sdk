@@ -8,6 +8,7 @@ import org.junit.Test;
 import support.BaseTest;
 import support.MemDbService;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
@@ -21,6 +22,30 @@ public class DbServiceTest extends BaseTest {
     public void initSpyDbService() throws SQLException {
         dbServiceSpy = spy(new MemDbService());
         dbServiceSpy.initialize();
+    }
+
+    @Test
+    public void constructWithSaveFilePath() throws IOException {
+        SaveFilePath saveFilePathMock = mock(SaveFilePath.class);
+        when(saveFilePathMock.getPath()).thenReturn("test");
+
+        DbService dbService = new DbService(saveFilePathMock);
+        String dbPath = dbService.getDbPath();
+
+        verify(saveFilePathMock, times(1)).getPath();
+        assertEquals("test/db/data", dbPath);
+    }
+
+    @Test
+    public void initializeIsCalledOnlyIfThereIsNotAConnection() throws Exception {
+        MemDbService memDbService = spy(new MemDbService("not_initialized_db"));
+        verify(memDbService, times(0)).createAllTables();
+
+        memDbService.initialize();
+        verify(memDbService, times(1)).createAllTables();
+
+        memDbService.initialize();
+        verify(memDbService, times(1)).createAllTables();
     }
 
     @Test

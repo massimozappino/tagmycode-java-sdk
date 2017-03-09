@@ -8,6 +8,7 @@ import com.j256.ormlite.table.TableUtils;
 import com.tagmycode.sdk.model.Language;
 import com.tagmycode.sdk.model.Snippet;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -19,16 +20,22 @@ public class DbService {
     private String dbPath;
     private Class[] tableClasses = {Language.class, Snippet.class};
 
-    public DbService(String dbPath) {
+    public DbService(SaveFilePath saveFilePath) {
+        this(saveFilePath.getPath() + File.separator + "db/data");
+    }
+
+    protected DbService(String dbPath) {
         this.dbPath = dbPath;
     }
 
     public void initialize() throws SQLException {
-        String databaseUrl = "jdbc:h2:" + dbPath;
-        jdbcConnectionSource = new JdbcConnectionSource(databaseUrl);
-        languageDao = createDao(Language.class);
-        snippetDao = createDao(Snippet.class);
-        createAllTables();
+        if (jdbcConnectionSource == null) {
+            String databaseUrl = "jdbc:h2:" + dbPath;
+            jdbcConnectionSource = new JdbcConnectionSource(databaseUrl);
+            languageDao = createDao(Language.class);
+            snippetDao = createDao(Snippet.class);
+            createAllTables();
+        }
     }
 
     public Class[] getTableClasses() {
@@ -71,5 +78,9 @@ public class DbService {
         if (jdbcConnectionSource != null) {
             jdbcConnectionSource.close();
         }
+    }
+
+    public String getDbPath() {
+        return dbPath;
     }
 }

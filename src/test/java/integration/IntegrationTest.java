@@ -22,4 +22,13 @@ public class IntegrationTest {
         assertTrue(languages.size() > 0);
     }
 
+    @Test
+    public void isServiceAvailable() throws Exception {
+        TagMyCode tagMyCode = new TagMyCode(createProductionClient());
+        assertTrue(tagMyCode.isServiceAvailable());
+    }
+
+    private Client createProductionClient() {
+        return new Client(new TagMyCodeApiProduction(), "key", "secret", new VoidOauthWallet());
+    }
 }
