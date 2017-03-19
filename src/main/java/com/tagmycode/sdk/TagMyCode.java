@@ -22,6 +22,10 @@ public class TagMyCode {
         this.client = client;
     }
 
+    public Client getClient() {
+        return client;
+    }
+
     public boolean isServiceAvailable() {
         String domain = client.getTagmycodeApi().getDomain();
 
