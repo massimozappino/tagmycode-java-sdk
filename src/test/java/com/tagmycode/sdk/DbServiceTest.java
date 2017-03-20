@@ -1,6 +1,7 @@
 package com.tagmycode.sdk;
 
 import com.tagmycode.sdk.model.Language;
+import com.tagmycode.sdk.model.Property;
 import com.tagmycode.sdk.model.Snippet;
 import org.junit.Assert;
 import org.junit.Before;
@@ -55,7 +56,7 @@ public class DbServiceTest extends BaseTest {
 
     @Test
     public void tableClasses() throws Exception {
-        Class[] classes = {Language.class, Snippet.class};
+        Class[] classes = {Language.class, Snippet.class, Property.class};
         Assert.assertArrayEquals(classes, dbServiceSpy.getTableClasses());
     }
 
@@ -95,6 +96,18 @@ public class DbServiceTest extends BaseTest {
         dbServiceSpy.snippetDao().createOrUpdate(snippet);
         Snippet readSnippet = dbServiceSpy.snippetDao().queryBuilder().queryForFirst();
         assertEquals(readSnippet, snippet);
+    }
+
+    @Test
+    public void testPropertiesTable() throws SQLException {
+        dbServiceSpy.propertyDao().createOrUpdate(new Property("key", "value"));
+        Property readProperty = dbServiceSpy.propertyDao().queryForId("key");
+        assertEquals("value", readProperty.getValue());
+        assertEquals(1, dbServiceSpy.propertyDao().countOf());
+
+        dbServiceSpy.propertyDao().createOrUpdate(new Property("key", "value"));
+
+        assertEquals(1, dbServiceSpy.propertyDao().countOf());
     }
 
     private void assertLanguagesCount(DbService dbService, long languagesCount) throws SQLException {

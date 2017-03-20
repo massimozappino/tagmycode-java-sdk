@@ -6,6 +6,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.tagmycode.sdk.model.Language;
+import com.tagmycode.sdk.model.Property;
 import com.tagmycode.sdk.model.Snippet;
 
 import java.io.File;
@@ -18,7 +19,8 @@ public class DbService {
     private Dao<Language, String> languageDao;
     private Dao<Snippet, String> snippetDao;
     private String dbPath;
-    private Class[] tableClasses = {Language.class, Snippet.class};
+    private Class[] tableClasses = {Language.class, Snippet.class, Property.class};
+    private Dao<Property, String> propertyDao;
 
     public DbService(SaveFilePath saveFilePath) {
         this(saveFilePath.getPath() + File.separator + "db/data");
@@ -34,6 +36,7 @@ public class DbService {
             jdbcConnectionSource = new JdbcConnectionSource(databaseUrl);
             languageDao = createDao(Language.class);
             snippetDao = createDao(Snippet.class);
+            propertyDao = createDao(Property.class);
             createAllTables();
         }
     }
@@ -70,6 +73,10 @@ public class DbService {
         return snippetDao;
     }
 
+    public Dao<Property, String> propertyDao() {
+        return propertyDao;
+    }
+
     private <D extends Dao<T, ?>, T> D createDao(Class<T> aClass) throws SQLException {
         return DaoManager.createDao(jdbcConnectionSource, aClass);
     }
@@ -83,4 +90,5 @@ public class DbService {
     public String getDbPath() {
         return dbPath;
     }
+
 }
