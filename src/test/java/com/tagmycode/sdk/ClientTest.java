@@ -181,7 +181,7 @@ public class ClientTest extends ClientBaseTest {
         try {
             client.refreshOauthToken();
             fail("Expected exception");
-        } catch (TagMyCodeUnauthorizedException ignore) {
+        } catch (TagMyCodeException ignore) {
         }
         assertEquals(new OauthToken("xxx", "yyy"), client.getOauthToken());
     }
@@ -231,8 +231,7 @@ public class ClientTest extends ClientBaseTest {
         try {
             new TagMyCode(client).fetchAccount();
             fail("Expected exception");
-        } catch (TagMyCodeException e) {
-            assertTrue(e instanceof TagMyCodeUnauthorizedException);
+        } catch (TagMyCodeException ignored) {
         }
     }
 
