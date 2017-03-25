@@ -9,13 +9,6 @@
     <description>Java SDK for TagMyCode REST API</description>
     <url>http://tagmycode.com</url>
 
-    <scm>
-        <connection>scm:git:git://github.com/massimozappino/tagmycode-java-sdk.git</connection>
-        <developerConnection>scm:git:git@github.com:massimozappino/tagmycode-java-sdk.git</developerConnection>
-        <url>https://github.com/massimozappino/tagmycode-java-sdk</url>
-        <tag>HEAD</tag>
-    </scm>
-
     <licenses>
         <license>
             <name>Apache License 2.0</name>
@@ -23,6 +16,19 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/massimozappino/tagmycode-java-sdk.git</connection>
+        <developerConnection>scm:git:git@github.com:massimozappino/tagmycode-java-sdk.git</developerConnection>
+        <url>https://github.com/massimozappino/tagmycode-java-sdk</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
     <developers>
         <developer>
@@ -105,6 +111,9 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <keyname>1F3AB7627F208553</keyname>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
