@@ -63,7 +63,7 @@ public class Client {
         try {
             setOauthToken(service.getAccessTokenFromRefreshToken(oauthToken.getRefreshToken()));
         } catch (OAuthException e) {
-            throw new TagMyCodeException();
+            throw new TagMyCodeException("Error fetching refresh token: " + e.getMessage());
         }
     }
 

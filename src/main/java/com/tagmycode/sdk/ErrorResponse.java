@@ -17,7 +17,7 @@ public class ErrorResponse {
             setMessage(json.getString("message"));
         } catch (JSONException e) {
             setCode(0);
-            setMessage(new TagMyCodeException().getMessage());
+            setMessage(new TagMyCodeException(e).getMessage());
         }
     }
 
