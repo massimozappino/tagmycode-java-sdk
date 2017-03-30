@@ -7,7 +7,7 @@ public class TagMyCodeException extends Exception {
     }
 
     public TagMyCodeException(Exception e) {
-        super(e);
+        super(e.getMessage());
     }
 
     @Override
