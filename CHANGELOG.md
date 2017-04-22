@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.1] - 2017-04-22
+### Changed
+- TagMyCodeException shows message of the parameter Exception
+
 ## [1.1.0] - 2017-03-25
 ### Added
 - Models are ready to be used by OrmLite and H2 Database
@@ -18,5 +22,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - added methods to manage TagMyCode API
  
-[1.1.0]: https://github.com/massimozappino/tagmycode-java-sdk/compare/tagmycode-sdk-1.0.0...HEAD
-[1.0.0]: https://github.com/massimozappino/tagmycode-java-sdk/compare/tagmycode-sdk-0.1.2...tagmycode-sdk-1.0.0
+[1.1.1]: https://github.com/massimozappino/tagmycode-java-sdk/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/massimozappino/tagmycode-java-sdk/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/massimozappino/tagmycode-java-sdk/compare/v0.1.2...v1.0.0
