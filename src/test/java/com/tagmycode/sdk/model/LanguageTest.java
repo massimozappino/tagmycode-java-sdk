@@ -60,7 +60,7 @@ public class LanguageTest extends ModelAbstractBaseTest {
 
     @Test
     public void collectionOfLanguages() {
-        LanguageCollection languages = new LanguageCollection();
+        LanguagesCollection languages = new LanguagesCollection();
         languages.add(new Language());
         assertEquals(1, languages.size());
     }

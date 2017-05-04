@@ -45,12 +45,12 @@ public class TagMyCode {
         return new User(cr.getBody());
     }
 
-    public LanguageCollection fetchLanguages() throws TagMyCodeException {
+    public LanguagesCollection fetchLanguages() throws TagMyCodeException {
         ClientResponse cr = client.sendRequest("languages", Verb.GET);
         return createLanguageCollection(cr);
     }
 
-    public SnippetCollection searchSnippets(String query) throws TagMyCodeException {
+    public SnippetsCollection searchSnippets(String query) throws TagMyCodeException {
         ParamList paramList = new ParamList()
                 .add("q", query);
 
@@ -79,13 +79,13 @@ public class TagMyCode {
         return new Snippet(cr.getBody());
     }
 
-    public SnippetCollection fetchSnippetsCollection() throws TagMyCodeException {
+    public SnippetsCollection fetchSnippetsCollection() throws TagMyCodeException {
         ClientResponse cr = client.sendRequest("snippets", Verb.GET);
 
         return createSnippetsCollection(cr);
     }
 
-    public SnippetCollection fetchSnippetsChanges(String gmtDate) throws TagMyCodeException {
+    public SnippetsCollection fetchSnippetsChanges(String gmtDate) throws TagMyCodeException {
         ParamList headers = new ParamList();
         headers.add("Snippets-Changes-Since", gmtDate);
         ClientResponse cr = client.sendRequest("snippets", Verb.GET, new ParamList(), headers);
@@ -127,13 +127,13 @@ public class TagMyCode {
                 .add("is_private", snippet.isPrivate());
     }
 
-    private LanguageCollection createLanguageCollection(ClientResponse cr) throws TagMyCodeJsonException {
-        return new LanguageCollection(cr.getBody());
+    private LanguagesCollection createLanguageCollection(ClientResponse cr) throws TagMyCodeJsonException {
+        return new LanguagesCollection(cr.getBody());
     }
 
-    protected SnippetCollection createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
+    protected SnippetsCollection createSnippetsCollection(ClientResponse cr) throws TagMyCodeJsonException {
         lastSnippetsUpdate = cr.extractLastResourceUpdate();
-        return new SnippetCollection(cr.getBody());
+        return new SnippetsCollection(cr.getBody());
     }
 
     public String getLastSnippetsUpdate() {
@@ -144,10 +144,10 @@ public class TagMyCode {
         this.lastSnippetsUpdate = lastSnippetsUpdate;
     }
 
-    public void syncSnippets(SnippetCollection localSnippets, SnippetsDeletions localDeletions) throws TagMyCodeException {
+    public void syncSnippets(SnippetsCollection localSnippets, SnippetsDeletions localDeletions) throws TagMyCodeException {
         // TODO sync should return snippets tu add, snippets to update and snippets to delete
 
-        SnippetCollection remoteSnippets = fetchSnippetsChanges(lastSnippetsUpdate);
+        SnippetsCollection remoteSnippets = fetchSnippetsChanges(lastSnippetsUpdate);
         SnippetsDeletions remoteDeletions = fetchDeletions(lastSnippetsUpdate);
 
         localSnippets.merge(remoteSnippets);

@@ -4,8 +4,8 @@ import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-public class SnippetCollection extends ModelCollection<Snippet> {
-    public SnippetCollection(String json) throws TagMyCodeJsonException {
+public class SnippetsCollection extends ModelCollection<Snippet> {
+    public SnippetsCollection(String json) throws TagMyCodeJsonException {
         JSONArray ja;
         try {
             ja = new JSONArray(json);
@@ -17,7 +17,7 @@ public class SnippetCollection extends ModelCollection<Snippet> {
         }
     }
 
-    public SnippetCollection() {
+    public SnippetsCollection() {
 
     }
 
@@ -53,7 +53,7 @@ public class SnippetCollection extends ModelCollection<Snippet> {
         return snippet;
     }
 
-    public void merge(SnippetCollection newSnippetCollection) {
+    public void merge(SnippetsCollection newSnippetCollection) {
         for (Snippet snippet : newSnippetCollection) {
             Snippet existentSnippet = getById(snippet.getId());
             if (existentSnippet != null) {

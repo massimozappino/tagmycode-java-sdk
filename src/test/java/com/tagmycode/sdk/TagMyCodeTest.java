@@ -46,7 +46,7 @@ public class TagMyCodeTest extends ClientBaseTest {
                         )));
 
 
-        LanguageCollection languages = tagMyCode.fetchLanguages();
+        LanguagesCollection languages = tagMyCode.fetchLanguages();
         Language language = languages.get(0);
         assertEquals(resourceGenerate.aLanguage(), language);
     }
@@ -60,7 +60,7 @@ public class TagMyCodeTest extends ClientBaseTest {
                         .withBody("[" + resourceGenerate.aSnippet().toJson() + "]"
                         )));
 
-        SnippetCollection searchCollection = tagMyCode.searchSnippets("java");
+        SnippetsCollection searchCollection = tagMyCode.searchSnippets("java");
 
         Snippet snippet = searchCollection.get(0);
         assertEquals(resourceGenerate.aSnippet(), snippet);
@@ -89,7 +89,7 @@ public class TagMyCodeTest extends ClientBaseTest {
                         .withBody(resourceGenerate.aSnippetCollection().toJson()
                         )));
 
-        SnippetCollection snippets = tagMyCode.fetchSnippetsCollection();
+        SnippetsCollection snippets = tagMyCode.fetchSnippetsCollection();
 
         assertEquals(resourceGenerate.aSnippetCollection(), snippets);
         assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", tagMyCode.getLastSnippetsUpdate());
@@ -106,7 +106,7 @@ public class TagMyCodeTest extends ClientBaseTest {
                         .withBody(resourceGenerate.aSnippetCollection().toJson())
                 ));
 
-        SnippetCollection snippets = tagMyCode.fetchSnippetsChanges(resourceGenerate.aSnippetsLastUpdate());
+        SnippetsCollection snippets = tagMyCode.fetchSnippetsChanges(resourceGenerate.aSnippetsLastUpdate());
 
         assertEquals(resourceGenerate.aSnippetCollection(), snippets);
         assertEquals("Sun, 24 Jan 2016 20:00:00 GMT", tagMyCode.getLastSnippetsUpdate());
@@ -248,14 +248,14 @@ public class TagMyCodeTest extends ClientBaseTest {
 
     @Test
     public void testSync() throws Exception {
-        final SnippetCollection changedSnippets = resourceGenerate.aSnippetCollection();
+        final SnippetsCollection changedSnippets = resourceGenerate.aSnippetCollection();
         changedSnippets.add(resourceGenerate.aSnippet().setId(5).setTitle("changed title"));
         changedSnippets.add(resourceGenerate.aSnippet().setId(6));
 
         final SnippetsDeletions remoteDeletions = new SnippetsDeletions();
         remoteDeletions.add(3);
 
-        SnippetCollection localSnippets = new SnippetCollection();
+        SnippetsCollection localSnippets = new SnippetsCollection();
         localSnippets.add(resourceGenerate.aSnippet().setId(1));
         localSnippets.add(resourceGenerate.aSnippet().setId(3));
         localSnippets.add(resourceGenerate.aSnippet().setId(4));
@@ -266,7 +266,7 @@ public class TagMyCodeTest extends ClientBaseTest {
         localDeletions.add(2);
 
         tagMyCode = new TagMyCode(client) {
-            public SnippetCollection fetchSnippetsChanges(String gmtDate) throws TagMyCodeException {
+            public SnippetsCollection fetchSnippetsChanges(String gmtDate) throws TagMyCodeException {
                 return changedSnippets;
             }
 

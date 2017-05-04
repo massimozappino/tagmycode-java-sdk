@@ -11,7 +11,7 @@ public class SnippetCollectionTest extends BaseTest {
 
     @Test
     public void testDefaultConstructor() throws Exception {
-        SnippetCollection snippetCollection = new SnippetCollection();
+        SnippetsCollection snippetCollection = new SnippetsCollection();
         assertEquals(0, snippetCollection.size());
         snippetCollection.add(new ResourceGenerate().aSnippet());
         assertEquals(1, snippetCollection.size());
@@ -20,14 +20,14 @@ public class SnippetCollectionTest extends BaseTest {
     @Test
     public void testConstructorWithJson() throws Exception {
         String json = new ResourceGenerate().aSnippetCollection().toJson();
-        SnippetCollection snippetCollection = new SnippetCollection(json);
+        SnippetsCollection snippetCollection = new SnippetsCollection(json);
         assertEquals(json, snippetCollection.toJson());
     }
 
     @Test
     public void testDeleteSnippetById() throws Exception {
         boolean isDeleted;
-        SnippetCollection snippetCollection = new SnippetCollection(resourceGenerate.aSnippetCollection().toJson());
+        SnippetsCollection snippetCollection = new SnippetsCollection(resourceGenerate.aSnippetCollection().toJson());
         assertEquals(2, snippetCollection.size());
 
         isDeleted = snippetCollection.deleteById(999);
@@ -41,7 +41,7 @@ public class SnippetCollectionTest extends BaseTest {
 
     @Test
     public void testDeleteSnippetsBySnippetsDeletions() throws Exception {
-        SnippetCollection snippetCollection = new SnippetCollection();
+        SnippetsCollection snippetCollection = new SnippetsCollection();
         snippetCollection.add(new Snippet().setId(1));
         snippetCollection.add(new Snippet().setId(2));
         snippetCollection.add(new Snippet().setId(3));
@@ -63,7 +63,7 @@ public class SnippetCollectionTest extends BaseTest {
 
     @Test
     public void testGetSnippetById() throws Exception {
-        SnippetCollection snippets = new SnippetCollection();
+        SnippetsCollection snippets = new SnippetsCollection();
         Snippet snippet1 = resourceGenerate.aSnippet();
         Snippet snippet2 = resourceGenerate.anotherSnippet();
         snippets.add(snippet1);
@@ -78,7 +78,7 @@ public class SnippetCollectionTest extends BaseTest {
 
     @Test
     public void testUpdateSnippet() throws Exception {
-        SnippetCollection snippets = new SnippetCollection();
+        SnippetsCollection snippets = new SnippetsCollection();
         Snippet snippet1 = resourceGenerate.aSnippet();
         Snippet snippet2 = resourceGenerate.anotherSnippet();
         snippets.add(snippet1);
@@ -100,9 +100,9 @@ public class SnippetCollectionTest extends BaseTest {
 
     @Test
     public void testMergeWithNewSnippetCollection() throws Exception {
-        SnippetCollection snippetsBase = new SnippetCollection();
+        SnippetsCollection snippetsBase = new SnippetsCollection();
         snippetsBase.add(resourceGenerate.aSnippet());
-        SnippetCollection newSnippetCollection = new SnippetCollection();
+        SnippetsCollection newSnippetCollection = new SnippetsCollection();
         newSnippetCollection.add(resourceGenerate.anotherSnippet());
         snippetsBase.merge(newSnippetCollection);
 
@@ -111,9 +111,9 @@ public class SnippetCollectionTest extends BaseTest {
 
     @Test
     public void testMergeWithNewSnippetCollectionWithSameId() throws Exception {
-        SnippetCollection snippetsBase = new SnippetCollection();
+        SnippetsCollection snippetsBase = new SnippetsCollection();
         snippetsBase.add(resourceGenerate.aSnippet());
-        SnippetCollection newSnippetCollection = new SnippetCollection();
+        SnippetsCollection newSnippetCollection = new SnippetsCollection();
         newSnippetCollection.add(resourceGenerate.aSnippet().setTitle("Changed title"));
 
         snippetsBase.merge(newSnippetCollection);
@@ -124,9 +124,9 @@ public class SnippetCollectionTest extends BaseTest {
 
     @Test
     public void testMergeNoIdWithNewSnippetCollection() throws Exception {
-        SnippetCollection snippetsBase = new SnippetCollection();
+        SnippetsCollection snippetsBase = new SnippetsCollection();
         snippetsBase.add(new Snippet());
-        SnippetCollection newSnippetCollection = new SnippetCollection();
+        SnippetsCollection newSnippetCollection = new SnippetsCollection();
         newSnippetCollection.add(resourceGenerate.aSnippet());
 
         snippetsBase.merge(newSnippetCollection);

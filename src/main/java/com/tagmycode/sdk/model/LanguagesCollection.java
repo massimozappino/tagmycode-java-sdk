@@ -4,8 +4,8 @@ import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-public class LanguageCollection extends ModelCollection<Language> {
-    public LanguageCollection(String json) throws TagMyCodeJsonException {
+public class LanguagesCollection extends ModelCollection<Language> {
+    public LanguagesCollection(String json) throws TagMyCodeJsonException {
         JSONArray ja;
         try {
             ja = new JSONArray(json);
@@ -18,6 +18,15 @@ public class LanguageCollection extends ModelCollection<Language> {
         }
     }
 
-    public LanguageCollection() {
+    public LanguagesCollection() {
+    }
+
+    public Language getByCode(String code) {
+        for (Language language : this) {
+            if (language.getCode().equals(code)) {
+                return language;
+            }
+        }
+        return null;
     }
 }

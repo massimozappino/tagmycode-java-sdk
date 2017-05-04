@@ -5,7 +5,7 @@ import com.tagmycode.sdk.Client;
 import com.tagmycode.sdk.TagMyCode;
 import com.tagmycode.sdk.authentication.OauthToken;
 import com.tagmycode.sdk.authentication.TagMyCodeApiProduction;
-import com.tagmycode.sdk.model.LanguageCollection;
+import com.tagmycode.sdk.model.LanguagesCollection;
 import org.junit.Test;
 import support.VoidOauthWallet;
 
@@ -18,7 +18,7 @@ public class IntegrationTest {
         Client client = new Client(new TagMyCodeApiProduction(), "123", "456", new VoidOauthWallet());
         client.setOauthToken(new OauthToken("123", "456"));
 
-        LanguageCollection languages = new TagMyCode(client).fetchLanguages();
+        LanguagesCollection languages = new TagMyCode(client).fetchLanguages();
         assertTrue(languages.size() > 0);
     }
 

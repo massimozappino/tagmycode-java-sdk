@@ -38,15 +38,15 @@ public class ResourceGenerate {
         return new User(resourceReader.readFile("user.json"));
     }
 
-    public LanguageCollection aLanguageCollection() throws IOException, TagMyCodeJsonException {
-        LanguageCollection languageCollection = new LanguageCollection();
+    public LanguagesCollection aLanguageCollection() throws IOException, TagMyCodeJsonException {
+        LanguagesCollection languageCollection = new LanguagesCollection();
         languageCollection.add(aLanguage());
         languageCollection.add(anotherLanguage());
         return languageCollection;
     }
 
-    public SnippetCollection aSnippetCollection() throws IOException, TagMyCodeJsonException {
-        SnippetCollection snippetCollection = new SnippetCollection();
+    public SnippetsCollection aSnippetCollection() throws IOException, TagMyCodeJsonException {
+        SnippetsCollection snippetCollection = new SnippetsCollection();
         snippetCollection.add(aSnippet());
         snippetCollection.add(anotherSnippet());
         return snippetCollection;

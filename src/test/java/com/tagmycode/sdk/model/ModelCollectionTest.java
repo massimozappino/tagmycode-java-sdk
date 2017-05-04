@@ -10,7 +10,7 @@ public class ModelCollectionTest extends BaseTest {
 
     @Test
     public void toJson() throws Exception {
-        LanguageCollection lc = new LanguageCollection();
+        LanguagesCollection lc = new LanguagesCollection();
 
         Language language1 = resourceGenerate.aLanguage();
         language1.setId(1);
@@ -26,21 +26,21 @@ public class ModelCollectionTest extends BaseTest {
 
     @Test
     public void toJsonAllowsDuplicate() throws Exception {
-        SnippetCollection snippets = new SnippetCollection();
+        SnippetsCollection snippets = new SnippetsCollection();
         snippets.add(resourceGenerate.aSnippet());
         snippets.add(resourceGenerate.aSnippet());
 
-        assertEquals(snippets, new SnippetCollection(snippets.toJson()));
+        assertEquals(snippets, new SnippetsCollection(snippets.toJson()));
     }
 
     @Test
     public void avoidNPE() throws Exception {
-        SnippetCollection newSnippetCollection = resourceGenerate.aSnippetCollection();
+        SnippetsCollection newSnippetCollection = resourceGenerate.aSnippetCollection();
         newSnippetCollection.add(resourceGenerate.anotherSnippet());
         newSnippetCollection.add(new Snippet().setId(5));
 
         assertEquals(4, newSnippetCollection.size());
 
-        assertEquals(new SnippetCollection(newSnippetCollection.toJson()), newSnippetCollection);
+        assertEquals(new SnippetsCollection(newSnippetCollection.toJson()), newSnippetCollection);
     }
 }

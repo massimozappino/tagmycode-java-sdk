@@ -12,7 +12,7 @@ public class DefaultLanguageCollectionTest extends BaseTest {
     @Test
     public void testConstructor() throws Exception {
         DefaultLanguageCollection defaultLanguageCollection = new DefaultLanguageCollection();
-        assertTrue(defaultLanguageCollection instanceof LanguageCollection);
+        assertTrue(defaultLanguageCollection instanceof LanguagesCollection);
         assertEquals(1, defaultLanguageCollection.size());
         assertEquals(new DefaultLanguage(), defaultLanguageCollection.get(0));
     }

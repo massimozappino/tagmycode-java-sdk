@@ -14,7 +14,7 @@ public class LanguageCollectionTest extends BaseTest {
 
     @Test
     public void restoreFromJson() throws IOException, JSONException, TagMyCodeJsonException {
-        LanguageCollection lc = new LanguageCollection();
+        LanguagesCollection lc = new LanguagesCollection();
 
         Language language1 = resourceGenerate.aLanguage();
         language1.setId(1);
@@ -26,6 +26,13 @@ public class LanguageCollectionTest extends BaseTest {
         lc.add(language2);
 
         String json = lc.toJson();
-        assertEquals(json, new LanguageCollection(json).toJson());
+        assertEquals(json, new LanguagesCollection(json).toJson());
+    }
+
+    @Test
+    public void testGetByCode() throws Exception {
+        LanguagesCollection languageCollection = resourceGenerate.aLanguageCollection();
+        assertEquals("Java", languageCollection.getByCode("java").getName());
+        assertEquals("Xxx", languageCollection.getByCode("xxx").getName());
     }
 }
