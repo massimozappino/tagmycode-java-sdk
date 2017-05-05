@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## UNRELEASED
+### Changed
+- renamed LanguagesCollection and SnippetsCollection
+### Added
+- LanguagesCollection can be searched by code
+
 ## [1.1.1] - 2017-04-22
 ### Changed
 - TagMyCodeException shows message of the parameter Exception
