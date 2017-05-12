@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class LanguageCollectionTest extends BaseTest {
 
@@ -30,9 +31,17 @@ public class LanguageCollectionTest extends BaseTest {
     }
 
     @Test
-    public void testGetByCode() throws Exception {
+    public void testFindByCode() throws Exception {
         LanguagesCollection languageCollection = resourceGenerate.aLanguageCollection();
-        assertEquals("Java", languageCollection.getByCode("java").getName());
-        assertEquals("Xxx", languageCollection.getByCode("xxx").getName());
+        assertEquals("Java", languageCollection.findByCode("java").getName());
+        assertEquals("Xxx", languageCollection.findByCode("xxx").getName());
     }
+
+    @Test
+    public void testFindByFileName() throws Exception {
+        LanguagesCollection languageCollection = resourceGenerate.aLanguageCollection();
+        assertEquals("Java", languageCollection.findByFileName("file.java").getName());
+        assertNull(languageCollection.findByFileName("file"));
+    }
+
 }

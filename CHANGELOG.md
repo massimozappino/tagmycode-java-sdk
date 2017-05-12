@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - renamed LanguagesCollection and SnippetsCollection
 ### Added
 - LanguagesCollection can be searched by code
+- LanguagesCollection can be searched by file name extension
 
 ## [1.1.1] - 2017-04-22
 ### Changed

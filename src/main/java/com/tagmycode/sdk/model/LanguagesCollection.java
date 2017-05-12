@@ -1,5 +1,6 @@
 package com.tagmycode.sdk.model;
 
+import com.tagmycode.sdk.FileNameToLanguage;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,12 +22,16 @@ public class LanguagesCollection extends ModelCollection<Language> {
     public LanguagesCollection() {
     }
 
-    public Language getByCode(String code) {
+    public Language findByCode(String code) {
         for (Language language : this) {
             if (language.getCode().equals(code)) {
                 return language;
             }
         }
         return null;
+    }
+
+    public Language findByFileName(String fileName) {
+        return findByCode(FileNameToLanguage.getCode(fileName));
     }
 }
