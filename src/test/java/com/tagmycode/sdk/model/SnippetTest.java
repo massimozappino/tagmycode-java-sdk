@@ -1,12 +1,14 @@
 package com.tagmycode.sdk.model;
 
+import com.j256.ormlite.dao.Dao;
 import com.tagmycode.sdk.DateParser;
+import com.tagmycode.sdk.DbService;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
+import support.MemDbService;
 import support.ModelAbstractBaseTest;
 
 import java.io.IOException;
@@ -23,7 +25,6 @@ public class SnippetTest extends ModelAbstractBaseTest {
 
     @Test
     public void newModelWithJsonObject() throws Exception {
-
         String jsonString = resourceGenerate.aLanguage().toJson();
         JSONObject jsonObject = new JSONObject()
                 .put("id", 1)
@@ -66,6 +67,14 @@ public class SnippetTest extends ModelAbstractBaseTest {
         s.setPrivate(true);
     }
 
+    @Test
+    public void canSaveWithoutLocalId() throws Exception {
+        DbService memDbService = new MemDbService().initialize();
+        Dao<Snippet, String> snippetDao = memDbService.snippetDao();
+        snippetDao.create(new Snippet());
+        assertEquals(1, snippetDao.queryForAll().get(0).getLocalId());
+        assertEquals(0, snippetDao.queryForAll().get(0).getId());
+    }
 
     private void assertSnippetValues(Snippet s, int id) throws ParseException {
         assertEquals(id, s.getId());

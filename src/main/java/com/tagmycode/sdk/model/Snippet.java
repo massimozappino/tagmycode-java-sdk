@@ -12,7 +12,9 @@ import java.util.Date;
 
 @DatabaseTable(tableName = "snippets")
 public class Snippet extends ModelAbstract {
-    @DatabaseField(id = true)
+    @DatabaseField(allowGeneratedIdInsert = true, generatedId = true)
+    private int localId;
+    @DatabaseField
     private int id;
     @DatabaseField
     private String title;
@@ -169,5 +171,13 @@ public class Snippet extends ModelAbstract {
     public Snippet setUrl(String url) {
         this.url = url;
         return this;
+    }
+
+    public int getLocalId() {
+        return localId;
+    }
+
+    public void setLocalId(int localId) {
+        this.localId = localId;
     }
 }

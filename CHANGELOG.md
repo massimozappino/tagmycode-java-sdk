@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - LanguagesCollection can be searched by code
 - LanguagesCollection can be searched by file name extension
+- Managed schema version with db drop and create
 
 ## [1.1.1] - 2017-04-22
 ### Changed

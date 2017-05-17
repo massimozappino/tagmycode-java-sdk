@@ -145,7 +145,7 @@ public class TagMyCode {
     }
 
     public void syncSnippets(SnippetsCollection localSnippets, SnippetsDeletions localDeletions) throws TagMyCodeException {
-        // TODO sync should return snippets tu add, snippets to update and snippets to delete
+        // TODO sync should return snippets to add, snippets to update and snippets to delete
 
         SnippetsCollection remoteSnippets = fetchSnippetsChanges(lastSnippetsUpdate);
         SnippetsDeletions remoteDeletions = fetchDeletions(lastSnippetsUpdate);

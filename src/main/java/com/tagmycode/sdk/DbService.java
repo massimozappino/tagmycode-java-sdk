@@ -15,6 +15,8 @@ import java.sql.SQLException;
 
 public class DbService {
 
+    public static final String SCHEMA_VERSION_PROPERTY_KEY = "_schemaVersion";
+    private final int currentSchemaVersion = 2;
     private JdbcConnectionSource jdbcConnectionSource;
     private Dao<Language, String> languageDao;
     private Dao<Snippet, String> snippetDao;
@@ -30,24 +32,45 @@ public class DbService {
         this.dbPath = dbPath;
     }
 
-    public void initialize() throws SQLException {
+    public DbService initialize() throws SQLException {
         if (jdbcConnectionSource == null) {
             String databaseUrl = "jdbc:h2:" + dbPath;
             jdbcConnectionSource = new JdbcConnectionSource(databaseUrl);
             languageDao = createDao(Language.class);
             snippetDao = createDao(Snippet.class);
             propertyDao = createDao(Property.class);
-            createAllTables();
+
+            if (!isCurrentSchemaVersion()) {
+                dropAllTables();
+                createAllTables();
+                setCurrentSchemaVersion();
+            }
         }
+        return this;
+    }
+
+    protected boolean isCurrentSchemaVersion() {
+        Property schemaVersionProperty = null;
+        try {
+            schemaVersionProperty = propertyDao.queryForId(SCHEMA_VERSION_PROPERTY_KEY);
+        } catch (Throwable ignored) {
+        }
+        return schemaVersionProperty != null && Integer.parseInt(schemaVersionProperty.getValue()) == this.currentSchemaVersion;
     }
 
     public Class[] getTableClasses() {
         return tableClasses;
     }
 
-    protected void createAllTables() throws SQLException {
+    public void createAllTables() throws SQLException {
         for (Class aClass : tableClasses) {
             createTableIfNotExists(aClass);
+        }
+    }
+
+    public void dropAllTables() throws SQLException {
+        for (Class aClass : tableClasses) {
+            dropTable(aClass);
         }
     }
 
@@ -59,6 +82,10 @@ public class DbService {
 
     protected void createTableIfNotExists(Class dataClass) throws SQLException {
         TableUtils.createTableIfNotExists(jdbcConnectionSource, dataClass);
+    }
+
+    protected void dropTable(Class dataClass) throws SQLException {
+        TableUtils.dropTable(jdbcConnectionSource, dataClass, true);
     }
 
     protected void clearTable(Class dataClass) throws SQLException {
@@ -91,4 +118,7 @@ public class DbService {
         return dbPath;
     }
 
+    public void setCurrentSchemaVersion() throws SQLException {
+        propertyDao.create(new Property(SCHEMA_VERSION_PROPERTY_KEY, String.valueOf(currentSchemaVersion)));
+    }
 }

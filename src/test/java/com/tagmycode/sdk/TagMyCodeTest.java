@@ -252,9 +252,6 @@ public class TagMyCodeTest extends ClientBaseTest {
         changedSnippets.add(resourceGenerate.aSnippet().setId(5).setTitle("changed title"));
         changedSnippets.add(resourceGenerate.aSnippet().setId(6));
 
-        final SnippetsDeletions remoteDeletions = new SnippetsDeletions();
-        remoteDeletions.add(3);
-
         SnippetsCollection localSnippets = new SnippetsCollection();
         localSnippets.add(resourceGenerate.aSnippet().setId(1));
         localSnippets.add(resourceGenerate.aSnippet().setId(3));
@@ -271,6 +268,8 @@ public class TagMyCodeTest extends ClientBaseTest {
             }
 
             public SnippetsDeletions fetchDeletions(String gmtDate) throws TagMyCodeException {
+                final SnippetsDeletions remoteDeletions = new SnippetsDeletions();
+                remoteDeletions.add(3);
                 return remoteDeletions;
             }
 
