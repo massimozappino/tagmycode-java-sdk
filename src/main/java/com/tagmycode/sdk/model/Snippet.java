@@ -34,6 +34,10 @@ public class Snippet extends ModelAbstract {
     private boolean isPrivate;
     @DatabaseField
     private String url;
+    @DatabaseField
+    private boolean dirty;
+    @DatabaseField
+    private boolean deleted;
 
     public Snippet() {
     }
@@ -177,7 +181,26 @@ public class Snippet extends ModelAbstract {
         return localId;
     }
 
-    public void setLocalId(int localId) {
+    public Snippet setLocalId(int localId) {
         this.localId = localId;
+        return this;
+    }
+
+    public boolean isDirty() {
+        return dirty;
+    }
+
+    public Snippet setDirty(boolean dirty) {
+        this.dirty = dirty;
+        return this;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Snippet isDeleted(boolean deleted) {
+        this.deleted = deleted;
+        return this;
     }
 }

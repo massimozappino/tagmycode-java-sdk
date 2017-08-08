@@ -11,10 +11,9 @@ import org.mockito.Mockito;
 import support.ClientBaseTest;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TagMyCodeTest extends ClientBaseTest {
     private TagMyCode tagMyCode;
@@ -244,56 +243,6 @@ public class TagMyCodeTest extends ClientBaseTest {
         } catch (TagMyCodeApiException ignore) {
             verify(deleteRequestedFor(urlMatching("/snippets/1?.*")));
         }
-    }
-
-    @Test
-    public void testSync() throws Exception {
-        final SnippetsCollection changedSnippets = resourceGenerate.aSnippetCollection();
-        changedSnippets.add(resourceGenerate.aSnippet().setId(5).setTitle("changed title"));
-        changedSnippets.add(resourceGenerate.aSnippet().setId(6));
-
-        SnippetsCollection localSnippets = new SnippetsCollection();
-        localSnippets.add(resourceGenerate.aSnippet().setId(1));
-        localSnippets.add(resourceGenerate.aSnippet().setId(3));
-        localSnippets.add(resourceGenerate.aSnippet().setId(4));
-        localSnippets.add(resourceGenerate.aSnippet().setId(5));
-        localSnippets.add(resourceGenerate.aSnippet().setId(0));
-
-        SnippetsDeletions localDeletions = new SnippetsDeletions();
-        localDeletions.add(2);
-
-        tagMyCode = new TagMyCode(client) {
-            public SnippetsCollection fetchSnippetsChanges(String gmtDate) throws TagMyCodeException {
-                return changedSnippets;
-            }
-
-            public SnippetsDeletions fetchDeletions(String gmtDate) throws TagMyCodeException {
-                final SnippetsDeletions remoteDeletions = new SnippetsDeletions();
-                remoteDeletions.add(3);
-                return remoteDeletions;
-            }
-
-            public Snippet createSnippet(Snippet inputSnippet) throws TagMyCodeException {
-                Snippet snippet = null;
-                try {
-                    snippet = resourceGenerate.aSnippet().setId(7);
-                } catch (Exception ignored) {
-                }
-                return snippet;
-            }
-        };
-
-        tagMyCode.syncSnippets(localSnippets, localDeletions);
-
-        assertNotNull(localSnippets.getById(1));
-        assertNull(localSnippets.getById(2));
-        assertNull(localSnippets.getById(3));
-        assertNotNull(localSnippets.getById(4));
-        assertNotNull(localSnippets.getById(5));
-        assertEquals("changed title", localSnippets.getById(5).getTitle());
-        assertNotNull(localSnippets.getById(6));
-        assertNotNull(localSnippets.getById(7));
-        assertEquals(5, localSnippets.size());
     }
 
     @Test

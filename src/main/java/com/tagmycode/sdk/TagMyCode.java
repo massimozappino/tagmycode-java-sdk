@@ -12,7 +12,6 @@ import org.scribe.model.Verb;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 
 public class TagMyCode {
     private final Client client;
@@ -144,33 +143,24 @@ public class TagMyCode {
         this.lastSnippetsUpdate = lastSnippetsUpdate;
     }
 
-    public void syncSnippets(SnippetsCollection localSnippets, SnippetsDeletions localDeletions) throws TagMyCodeException {
-        // TODO sync should return snippets to add, snippets to update and snippets to delete
+    public SyncSnippets syncSnippets(SnippetsCollection dirtySnippets, SnippetsDeletions localDeletions) throws TagMyCodeException {
+        SnippetsCollection remoteChangedSnippets = fetchSnippetsChanges(lastSnippetsUpdate);
+        SnippetsDeletions remoteDeletedSnippets = fetchDeletions(lastSnippetsUpdate);
 
-        SnippetsCollection remoteSnippets = fetchSnippetsChanges(lastSnippetsUpdate);
-        SnippetsDeletions remoteDeletions = fetchDeletions(lastSnippetsUpdate);
+        for (int deletion : localDeletions) {
+            deleteSnippet(deletion);
+        }
 
-        localSnippets.merge(remoteSnippets);
-        localSnippets.deleteByDeletions(remoteDeletions);
-        localSnippets.deleteByDeletions(localDeletions);
-
-        ArrayList<Snippet> snippetsToAdd = new ArrayList<Snippet>();
-        ArrayList<Snippet> snippetsToDelete = new ArrayList<Snippet>();
-
-        for (Snippet snippet : localSnippets) {
+        for (Snippet snippet : dirtySnippets) {
             if (snippet.getId() == 0) {
-                snippetsToAdd.add(createSnippet(snippet));
-                snippetsToDelete.add(snippet);
+                remoteChangedSnippets.add(createSnippet(snippet));
+            } else {
+                Snippet e = updateSnippet(snippet);
+                remoteChangedSnippets.add(e);
             }
         }
 
-        for (Snippet snippet : snippetsToAdd) {
-            localSnippets.add(snippet);
-        }
-
-        for (Snippet snippet : snippetsToDelete) {
-            localSnippets.remove(snippet);
-        }
+        return new SyncSnippets(remoteChangedSnippets, remoteDeletedSnippets);
     }
 
     public OauthToken loadOauthToken() throws TagMyCodeException {

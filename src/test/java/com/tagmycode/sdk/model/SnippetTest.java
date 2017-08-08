@@ -65,6 +65,8 @@ public class SnippetTest extends ModelAbstractBaseTest {
         s.setDescription("A simple description");
         s.setTags("tag1 tag2 tag3");
         s.setPrivate(true);
+        s.setDirty(true);
+        s.isDeleted(true);
     }
 
     @Test
@@ -87,7 +89,6 @@ public class SnippetTest extends ModelAbstractBaseTest {
         assertEquals(new DateParser().parseDate("2010-11-22T13:11:25+00:00"), s.getUpdateDate());
         assertEquals("https://tagmycode.com/snippet/1", s.getUrl());
     }
-
 
     @Test
     public void compareModelObject() throws IOException, TagMyCodeJsonException {
@@ -125,6 +126,16 @@ public class SnippetTest extends ModelAbstractBaseTest {
         assertEquals(resourceGenerate.aSnippet().toJson(), snippet.toJson());
         assertEquals(resourceGenerate.aLanguage(), snippet.getLanguage());
         assertTrue(snippet.equals(resourceGenerate.aSnippet()));
+    }
+
+    @Test
+    public void dirtyIsFalseOnNewSnippet() {
+        Snippet snippet = new Snippet();
+        assertFalse(snippet.isDirty());
+        snippet.setDirty(true);
+        assertTrue(snippet.isDirty());
+        snippet.setDirty(false);
+        assertFalse(snippet.isDirty());
     }
 
     @Test
