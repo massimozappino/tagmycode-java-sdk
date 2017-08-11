@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - LanguagesCollection can be searched by file name extension
 - Managed schema version with db drop and create
 - Added "dirty" and "deleted" fields on snippet model
+- Added SnippetStorage to manage SQL snippets operations
 
 ## [1.1.1] - 2017-04-22
 ### Changed

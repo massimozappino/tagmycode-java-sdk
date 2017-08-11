@@ -1,5 +1,6 @@
 package com.tagmycode.sdk;
 
+import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import com.tagmycode.sdk.model.Language;
 import com.tagmycode.sdk.model.Property;
 import com.tagmycode.sdk.model.Snippet;
@@ -152,6 +153,21 @@ public class DbServiceTest extends BaseTest {
         dbServiceSpy.propertyDao().createOrUpdate(new Property("key", "value"));
 
         assertEquals(1, dbServiceSpy.propertyDao().countOf());
+    }
+
+    @Test
+    public void xxx() throws SQLException, IOException, TagMyCodeJsonException {
+        dbServiceSpy.clearAllTables();
+
+        Snippet snippet = resourceGenerate.aSnippet();
+        dbServiceSpy.snippetDao().create(snippet);
+
+        Snippet actual = dbServiceSpy.snippetDao().queryForId(String.valueOf(snippet.getLocalId()));
+        actual.setTitle("new title");
+
+        dbServiceSpy.snippetDao().createOrUpdate(actual);
+
+        assertEquals("new title", dbServiceSpy.snippetDao().queryForId(String.valueOf(snippet.getLocalId())).getTitle());
     }
 
     private void assertLanguagesCount(DbService dbService, long languagesCount) throws SQLException {
