@@ -4,6 +4,8 @@ import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.List;
+
 public class SnippetsCollection extends ModelCollection<Snippet> {
     public SnippetsCollection(String json) throws TagMyCodeJsonException {
         JSONArray ja;
@@ -18,7 +20,11 @@ public class SnippetsCollection extends ModelCollection<Snippet> {
     }
 
     public SnippetsCollection() {
+        super();
+    }
 
+    public SnippetsCollection(List<Snippet> snippetList) {
+        super(snippetList);
     }
 
     public boolean deleteById(int id) {

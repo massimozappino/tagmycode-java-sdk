@@ -13,8 +13,8 @@ public class SnippetsStorage {
         snippetDao = dbService.snippetDao();
     }
 
-    public List<Snippet> findDirty() throws SQLException {
-        return snippetDao.queryForEq("dirty", true);
+    public SnippetsCollection findDirty() throws SQLException {
+        return new SnippetsCollection(snippetDao.queryForEq("dirty", true));
     }
 
     public Snippet findBySnippetId(int snippetId) throws SQLException {

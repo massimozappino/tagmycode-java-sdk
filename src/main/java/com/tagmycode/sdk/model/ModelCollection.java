@@ -5,9 +5,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class ModelCollection<T extends ModelAbstract> extends Vector<T> {
+
+    public ModelCollection() {
+
+    }
+
+    public ModelCollection(List<T> list) {
+        super(list);
+    }
 
     public String toJson() throws JSONException {
         ArrayList<String> jsonStringArray = new ArrayList<String>();

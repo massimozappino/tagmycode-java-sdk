@@ -5,6 +5,9 @@ import org.junit.Test;
 import support.BaseTest;
 import support.ResourceGenerate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class SnippetCollectionTest extends BaseTest {
@@ -20,8 +23,17 @@ public class SnippetCollectionTest extends BaseTest {
     @Test
     public void testConstructorWithJson() throws Exception {
         String json = new ResourceGenerate().aSnippetCollection().toJson();
-        SnippetsCollection snippetCollection = new SnippetsCollection(json);
-        assertEquals(json, snippetCollection.toJson());
+        assertEquals(json, new SnippetsCollection(json).toJson());
+    }
+
+    @Test
+    public void testConstructorWithList() throws Exception {
+        List<Snippet> arrayListOfSnippets = new ArrayList<Snippet>();
+        arrayListOfSnippets.add(resourceGenerate.aSnippet());
+        arrayListOfSnippets.add(resourceGenerate.anotherSnippet());
+
+        SnippetsCollection snippetCollection = new SnippetsCollection(arrayListOfSnippets);
+        assertEquals(2, snippetCollection.size());
     }
 
     @Test
