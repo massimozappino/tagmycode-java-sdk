@@ -13,15 +13,28 @@ public class SnippetsStorage {
         snippetDao = dbService.snippetDao();
     }
 
-    public SnippetsCollection findDirty() throws SQLException {
-        return new SnippetsCollection(snippetDao.queryForEq("dirty", true));
-    }
-
     public Snippet findBySnippetId(int snippetId) throws SQLException {
         List<Snippet> snippets = snippetDao.queryForEq("id", snippetId);
         if (snippets.size() == 0) {
             return null;
         }
         return snippets.get(0);
+    }
+
+    public Snippet findByLocalId(int localId) throws SQLException {
+        return snippetDao.queryForId(String.valueOf(localId));
+    }
+
+    public SnippetsCollection findDirty() throws SQLException {
+        return new SnippetsCollection(snippetDao.queryForEq("dirty", true));
+    }
+
+    public SnippetsCollection findVisible() throws SQLException {
+        return new SnippetsCollection(snippetDao.queryForEq("deleted", false));
+    }
+
+
+    public SnippetsCollection findDeleted() throws SQLException {
+        return new SnippetsCollection(snippetDao.queryForEq("deleted", true));
     }
 }

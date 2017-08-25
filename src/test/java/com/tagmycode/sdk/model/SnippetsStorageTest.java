@@ -7,7 +7,6 @@ import support.BaseTest;
 import support.MemDbService;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -35,6 +34,39 @@ public class SnippetsStorageTest extends BaseTest {
     }
 
     @Test
+    public void findVisible() throws Exception {
+        snippetDao.create(resourceGenerate.aSnippet().setId(1));
+        snippetDao.create(resourceGenerate.aSnippet().setId(2).setDeleted(true));
+
+        SnippetsCollection snippets = snippetsStorage.findVisible();
+
+        assertEquals(1, snippets.size());
+        assertEquals(1, snippets.firstElement().getId());
+    }
+
+    @Test
+    public void findDeleted() throws Exception {
+        snippetDao.create(resourceGenerate.aSnippet().setId(1));
+        snippetDao.create(resourceGenerate.aSnippet().setId(2).setDeleted(true));
+
+        SnippetsCollection snippets = snippetsStorage.findDeleted();
+
+        assertEquals(1, snippets.size());
+        assertEquals(2, snippets.firstElement().getId());
+    }
+
+    @Test
+    public void findByLocalId() throws Exception {
+        snippetDao.create(resourceGenerate.aSnippet().setId(2).setLocalId(1));
+        snippetDao.create(resourceGenerate.aSnippet().setId(1).setLocalId(2));
+
+        Snippet snippet = snippetsStorage.findByLocalId(1);
+
+        assertEquals(1, snippet.getLocalId());
+        assertEquals(2, snippet.getId());
+    }
+
+    @Test
     public void findBySnippetIdOnEmptyTable() throws Exception {
         assertNull(snippetsStorage.findBySnippetId(1));
     }
@@ -44,9 +76,9 @@ public class SnippetsStorageTest extends BaseTest {
         snippetDao.create(resourceGenerate.aSnippet().setDirty(true).setTitle("dirty"));
         snippetDao.create(resourceGenerate.aSnippet().setDirty(false).setTitle("non dirty"));
 
-        List<Snippet> dirtySnippets = snippetsStorage.findDirty();
+        SnippetsCollection dirtySnippets = snippetsStorage.findDirty();
 
         assertEquals(1, dirtySnippets.size());
-        assertEquals("dirty", dirtySnippets.get(0).getTitle());
+        assertEquals("dirty", dirtySnippets.firstElement().getTitle());
     }
 }

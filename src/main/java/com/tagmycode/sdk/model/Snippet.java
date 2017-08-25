@@ -195,12 +195,12 @@ public class Snippet extends ModelAbstract {
         return this;
     }
 
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public Snippet isDeleted(boolean deleted) {
+    public Snippet setDeleted(boolean deleted) {
         this.deleted = deleted;
         return this;
+    }
+
+    public boolean isDeleted() {
+        return this.deleted;
     }
 }

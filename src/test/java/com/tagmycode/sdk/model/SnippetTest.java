@@ -66,7 +66,7 @@ public class SnippetTest extends ModelAbstractBaseTest {
         s.setTags("tag1 tag2 tag3");
         s.setPrivate(true);
         s.setDirty(true);
-        s.isDeleted(true);
+        s.setDeleted(true);
     }
 
     @Test
