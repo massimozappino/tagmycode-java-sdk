@@ -2,6 +2,7 @@ package com.tagmycode.sdk;
 
 
 import com.tagmycode.sdk.authentication.OauthToken;
+import com.tagmycode.sdk.exception.TagMyCodeApiException;
 import com.tagmycode.sdk.exception.TagMyCodeException;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import com.tagmycode.sdk.exception.TagMyCodeUnauthorizedException;
@@ -151,12 +152,22 @@ public class TagMyCode {
             deleteSnippet(deletion);
         }
 
+        // TODO refactoring
         for (Snippet snippet : dirtySnippets) {
             if (snippet.getId() == 0) {
-                remoteChangedSnippets.add(createSnippet(snippet));
+                Snippet createdSnippet = createSnippet(snippet);
+                createdSnippet.setLocalId(snippet.getLocalId());
+                remoteChangedSnippets.add(createdSnippet);
             } else {
-                Snippet e = updateSnippet(snippet);
-                remoteChangedSnippets.add(e);
+                Snippet updatedSnippet;
+                try {
+                    updatedSnippet = updateSnippet(snippet);
+                } catch (TagMyCodeApiException e) {
+                    snippet.setTitle(snippet.getTitle() + " [Conflict]");
+                    updatedSnippet = createSnippet(snippet);
+                    updatedSnippet.setLocalId(snippet.getLocalId());
+                }
+                remoteChangedSnippets.add(updatedSnippet);
             }
         }
 

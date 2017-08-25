@@ -37,6 +37,12 @@ public class SnippetCollectionTest extends BaseTest {
     }
 
     @Test
+    public void testConstructorWithMultipleElements() throws Exception {
+        SnippetsCollection snippetCollection = new SnippetsCollection(resourceGenerate.aSnippet(), resourceGenerate.anotherSnippet());
+        assertEquals(2, snippetCollection.size());
+    }
+
+    @Test
     public void testDeleteSnippetById() throws Exception {
         boolean isDeleted;
         SnippetsCollection snippetCollection = new SnippetsCollection(resourceGenerate.aSnippetCollection().toJson());

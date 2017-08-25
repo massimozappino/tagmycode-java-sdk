@@ -46,7 +46,7 @@ public class SynchronizeSnippetsTest extends ClientBaseTest {
         tagMyCodeSyncReturns(tagMyCode, new SnippetsCollection(), new SnippetsDeletions());
 
         SnippetsCollection dirtySnippets = new SnippetsCollection();
-        Snippet localSnippet = resourceGenerate.aSnippet().setId(0).setTitle("local title");
+        Snippet localSnippet = resourceGenerate.aSnippet().setId(0).setTitle("local title").setLocalId(99);
         dirtySnippets.add(localSnippet);
 
         Date creationDate = new DateParser().parseDate("2017-11-22T13:11:25Z");
@@ -59,6 +59,7 @@ public class SynchronizeSnippetsTest extends ClientBaseTest {
         verify(tagMyCode).createSnippet(localSnippet);
 
         assertEquals(creationDate.toString(), firstSnippetOf(syncSnippets).getCreationDate().toString());
+        assertEquals(99, firstSnippetOf(syncSnippets).getLocalId());
     }
 
     @Test

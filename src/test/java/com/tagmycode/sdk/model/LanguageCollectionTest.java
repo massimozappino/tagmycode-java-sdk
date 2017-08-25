@@ -2,11 +2,13 @@ package com.tagmycode.sdk.model;
 
 
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
-import support.BaseTest;
 import org.json.JSONException;
 import org.junit.Test;
+import support.BaseTest;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -42,6 +44,22 @@ public class LanguageCollectionTest extends BaseTest {
         LanguagesCollection languageCollection = resourceGenerate.aLanguageCollection();
         assertEquals("Java", languageCollection.findByFileName("file.java").getName());
         assertNull(languageCollection.findByFileName("file"));
+    }
+
+    @Test
+    public void testConstructorWithList() throws Exception {
+        List<Language> arrayListOfLanguages = new ArrayList<Language>();
+        arrayListOfLanguages.add(resourceGenerate.aLanguage());
+        arrayListOfLanguages.add(resourceGenerate.anotherLanguage());
+
+        LanguagesCollection languagesCollection = new LanguagesCollection(arrayListOfLanguages);
+        assertEquals(2, languagesCollection.size());
+    }
+
+    @Test
+    public void testConstructorWithMultipleElements() throws Exception {
+        LanguagesCollection languagesCollection = new LanguagesCollection(resourceGenerate.aLanguage(), resourceGenerate.anotherLanguage());
+        assertEquals(2, languagesCollection.size());
     }
 
 }

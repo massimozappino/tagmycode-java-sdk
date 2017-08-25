@@ -27,6 +27,10 @@ public class SnippetsCollection extends ModelCollection<Snippet> {
         super(snippetList);
     }
 
+    public SnippetsCollection(Snippet... snippets) {
+        super(snippets);
+    }
+
     public boolean deleteById(int id) {
         for (Snippet snippet : this) {
             if (snippet.getId() == id) {
