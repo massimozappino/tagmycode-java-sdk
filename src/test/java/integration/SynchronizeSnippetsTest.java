@@ -4,14 +4,17 @@ package integration;
 import com.tagmycode.sdk.DateParser;
 import com.tagmycode.sdk.SyncSnippets;
 import com.tagmycode.sdk.TagMyCode;
+import com.tagmycode.sdk.exception.TagMyCodeApiException;
 import com.tagmycode.sdk.exception.TagMyCodeException;
 import com.tagmycode.sdk.model.Snippet;
 import com.tagmycode.sdk.model.SnippetsCollection;
 import com.tagmycode.sdk.model.SnippetsDeletions;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import support.ClientBaseTest;
 
+import java.io.IOException;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
@@ -97,8 +100,7 @@ public class SynchronizeSnippetsTest extends ClientBaseTest {
 
     @Test
     public void deleteSnippetFromServer() throws Exception {
-        SnippetsDeletions remoteDeletions = new SnippetsDeletions();
-        remoteDeletions.add(12);
+        SnippetsDeletions remoteDeletions = new SnippetsDeletions(12);
         tagMyCodeSyncReturns(tagMyCode, new SnippetsCollection(), remoteDeletions);
 
         SyncSnippets syncSnippets = tagMyCode.syncSnippets(new SnippetsCollection(), new SnippetsDeletions());
@@ -114,12 +116,39 @@ public class SynchronizeSnippetsTest extends ClientBaseTest {
         SnippetsCollection dirtySnippets = new SnippetsCollection();
         dirtySnippets.add(resourceGenerate.aSnippet().setId(1));
 
-        SnippetsDeletions localDeletions = new SnippetsDeletions();
-        localDeletions.add(1);
+        SnippetsDeletions localDeletions = new SnippetsDeletions(1);
         SyncSnippets syncSnippets = tagMyCode.syncSnippets(dirtySnippets, localDeletions);
 
         verify(tagMyCode, times(1)).deleteSnippet(1);
         assertEquals(0, syncSnippets.getDeletedSnippets().size());
+    }
+
+    @Test
+    public void deleteSnippetsBeforeRequestChanges() throws TagMyCodeException, IOException {
+        tagMyCodeSyncReturns(tagMyCode, new SnippetsCollection(), new SnippetsDeletions());
+
+        tagMyCode.syncSnippets(new SnippetsCollection(), new SnippetsDeletions());
+
+        InOrder inOrder = inOrder(tagMyCode);
+        inOrder.verify(tagMyCode, times(1)).deleteSnippets((SnippetsDeletions) any());
+        inOrder.verify(tagMyCode, times(1)).fetchSnippetsChanges(anyString());
+    }
+
+    @Test
+    public void conflict() throws Exception {
+        Snippet snippet = resourceGenerate.aSnippet().setId(1).setTitle("Title");
+        tagMyCodeSyncReturns(tagMyCode, new SnippetsCollection(), new SnippetsDeletions());
+        doThrow(new TagMyCodeApiException()).when(tagMyCode).updateSnippet((Snippet) any());
+        doReturn(snippet).when(tagMyCode).createSnippet((Snippet) any());
+
+        SnippetsCollection dirtySnippets = new SnippetsCollection();
+        dirtySnippets.add(snippet);
+
+        SyncSnippets syncSnippets = tagMyCode.syncSnippets(dirtySnippets, new SnippetsDeletions());
+
+        verify(tagMyCode, times(1)).updateSnippet(dirtySnippets.firstElement());
+        verify(tagMyCode, times(1)).createSnippet(dirtySnippets.firstElement());
+        assertEquals("Title [Conflict]", firstSnippetOf(syncSnippets).getTitle());
     }
 
     private void tagMyCodeSyncReturns(TagMyCode tagMyCode, SnippetsCollection snippetsChanges, SnippetsDeletions remoteDeletions) throws TagMyCodeException {

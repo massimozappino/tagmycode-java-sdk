@@ -145,33 +145,39 @@ public class TagMyCode {
     }
 
     public SyncSnippets syncSnippets(SnippetsCollection dirtySnippets, SnippetsDeletions localDeletions) throws TagMyCodeException {
+        deleteSnippets(localDeletions);
         SnippetsCollection remoteChangedSnippets = fetchSnippetsChanges(lastSnippetsUpdate);
         SnippetsDeletions remoteDeletedSnippets = fetchDeletions(lastSnippetsUpdate);
 
-        for (int deletion : localDeletions) {
-            deleteSnippet(deletion);
-        }
-
-        // TODO refactoring
         for (Snippet snippet : dirtySnippets) {
+            Snippet changedSnippet;
+
             if (snippet.getId() == 0) {
-                Snippet createdSnippet = createSnippet(snippet);
-                createdSnippet.setLocalId(snippet.getLocalId());
-                remoteChangedSnippets.add(createdSnippet);
+                changedSnippet = createSnippetAndSetLocalId(snippet);
             } else {
-                Snippet updatedSnippet;
                 try {
-                    updatedSnippet = updateSnippet(snippet);
+                    changedSnippet = updateSnippet(snippet);
                 } catch (TagMyCodeApiException e) {
                     snippet.setTitle(snippet.getTitle() + " [Conflict]");
-                    updatedSnippet = createSnippet(snippet);
-                    updatedSnippet.setLocalId(snippet.getLocalId());
+                    changedSnippet = createSnippetAndSetLocalId(snippet);
                 }
-                remoteChangedSnippets.add(updatedSnippet);
             }
+            remoteChangedSnippets.add(changedSnippet);
         }
 
         return new SyncSnippets(remoteChangedSnippets, remoteDeletedSnippets);
+    }
+
+    protected Snippet createSnippetAndSetLocalId(Snippet snippet) throws TagMyCodeException {
+        Snippet newSnippet = createSnippet(snippet);
+        newSnippet.setLocalId(snippet.getLocalId());
+        return newSnippet;
+    }
+
+    public void deleteSnippets(SnippetsDeletions localDeletions) throws TagMyCodeException {
+        for (int deletion : localDeletions) {
+            deleteSnippet(deletion);
+        }
     }
 
     public OauthToken loadOauthToken() throws TagMyCodeException {

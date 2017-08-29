@@ -25,8 +25,11 @@ public class SnippetsStorage {
         return snippetDao.queryForId(String.valueOf(localId));
     }
 
-    public SnippetsCollection findDirty() throws SQLException {
-        return new SnippetsCollection(snippetDao.queryForEq("dirty", true));
+    public SnippetsCollection findDirtyNotDeleted() throws SQLException {
+        return new SnippetsCollection(snippetDao.queryBuilder().where()
+                .eq("dirty", true)
+                .and()
+                .eq("deleted", false).query());
     }
 
     public SnippetsCollection findVisible() throws SQLException {
@@ -36,5 +39,14 @@ public class SnippetsStorage {
 
     public SnippetsCollection findDeleted() throws SQLException {
         return new SnippetsCollection(snippetDao.queryForEq("deleted", true));
+    }
+
+    public SnippetsDeletions findDeletedIds() throws SQLException {
+        SnippetsDeletions snippetsDeletions = new SnippetsDeletions();
+        SnippetsCollection deletedSnippets = findDeleted();
+        for (Snippet snippet : deletedSnippets) {
+            snippetsDeletions.add(snippet.getId());
+        }
+        return snippetsDeletions;
     }
 }

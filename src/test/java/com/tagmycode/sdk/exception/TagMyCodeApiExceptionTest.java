@@ -1,9 +1,9 @@
 package com.tagmycode.sdk.exception;
 
 import com.tagmycode.sdk.ClientResponse;
-import support.TagMyCodeExceptionBaseTest;
 import org.junit.Test;
 import org.scribe.model.Response;
+import support.TagMyCodeExceptionBaseTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -21,6 +21,13 @@ public class TagMyCodeApiExceptionTest extends TagMyCodeExceptionBaseTest {
         TagMyCodeApiException exception = new TagMyCodeApiException(new ClientResponse(responseMockWithError()));
         assertEquals(400, exception.getHttpStatusCode());
         assertEquals("My custom message error", exception.getMessage());
+    }
+
+    @Test
+    public void simpleConstructor() {
+        TagMyCodeApiException exception = new TagMyCodeApiException();
+        assertEquals(500, exception.getHttpStatusCode());
+        assertEquals("Generic error", exception.getMessage());
     }
 
     private Response responseMockWithError() {

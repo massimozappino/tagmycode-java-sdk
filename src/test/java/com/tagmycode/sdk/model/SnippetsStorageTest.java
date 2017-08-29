@@ -56,6 +56,17 @@ public class SnippetsStorageTest extends BaseTest {
     }
 
     @Test
+    public void findDeletedIds() throws Exception {
+        snippetDao.create(resourceGenerate.aSnippet().setId(1));
+        snippetDao.create(resourceGenerate.aSnippet().setId(2).setDeleted(true));
+
+        SnippetsDeletions snippetsDeletions = snippetsStorage.findDeletedIds();
+
+        assertEquals(1, snippetsDeletions.size());
+        assertEquals(2, (int) snippetsDeletions.get(0));
+    }
+
+    @Test
     public void findByLocalId() throws Exception {
         snippetDao.create(resourceGenerate.aSnippet().setId(2).setLocalId(1));
         snippetDao.create(resourceGenerate.aSnippet().setId(1).setLocalId(2));
@@ -72,11 +83,12 @@ public class SnippetsStorageTest extends BaseTest {
     }
 
     @Test
-    public void findDirtySnippets() throws Exception {
+    public void findDirtySnippetsNotDeleted() throws Exception {
         snippetDao.create(resourceGenerate.aSnippet().setDirty(true).setTitle("dirty"));
         snippetDao.create(resourceGenerate.aSnippet().setDirty(false).setTitle("non dirty"));
+        snippetDao.create(resourceGenerate.aSnippet().setDirty(true).setTitle("dirty not deleted").setDeleted(true));
 
-        SnippetsCollection dirtySnippets = snippetsStorage.findDirty();
+        SnippetsCollection dirtySnippets = snippetsStorage.findDirtyNotDeleted();
 
         assertEquals(1, dirtySnippets.size());
         assertEquals("dirty", dirtySnippets.firstElement().getTitle());

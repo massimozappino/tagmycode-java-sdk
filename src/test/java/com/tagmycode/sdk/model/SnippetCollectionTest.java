@@ -66,9 +66,7 @@ public class SnippetCollectionTest extends BaseTest {
         snippetCollection.add(new Snippet().setId(4));
         snippetCollection.add(new Snippet().setId(5));
 
-        SnippetsDeletions deletions = new SnippetsDeletions();
-        deletions.add(2);
-        deletions.add(4);
+        SnippetsDeletions deletions = new SnippetsDeletions(2, 4);
 
         snippetCollection.deleteByDeletions(deletions);
         assertEquals(3, snippetCollection.size());

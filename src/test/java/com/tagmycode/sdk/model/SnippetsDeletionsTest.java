@@ -15,4 +15,9 @@ public class SnippetsDeletionsTest {
 
         assertEquals("[2, 3, 4]", snippetsDeletions.toJson());
     }
+
+    @Test
+    public void constructorWithArrayOfInt() {
+        assertEquals("[1, 2, 3, 99]", new SnippetsDeletions(1, 2, 3, 99).toJson());
+    }
 }
