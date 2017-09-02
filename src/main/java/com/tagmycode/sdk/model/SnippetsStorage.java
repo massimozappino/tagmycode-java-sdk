@@ -1,12 +1,15 @@
 package com.tagmycode.sdk.model;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.tagmycode.sdk.DbService;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class SnippetsStorage {
+    public static final String COLUMN_DIRTY = "dirty";
+    public static final String COLUMN_DELETED = "deleted";
     private Dao<Snippet, String> snippetDao;
 
     public SnippetsStorage(DbService dbService) {
@@ -27,18 +30,18 @@ public class SnippetsStorage {
 
     public SnippetsCollection findDirtyNotDeleted() throws SQLException {
         return new SnippetsCollection(snippetDao.queryBuilder().where()
-                .eq("dirty", true)
+                .eq(COLUMN_DIRTY, true)
                 .and()
-                .eq("deleted", false).query());
+                .eq(COLUMN_DELETED, false).query());
     }
 
     public SnippetsCollection findVisible() throws SQLException {
-        return new SnippetsCollection(snippetDao.queryForEq("deleted", false));
+        return new SnippetsCollection(snippetDao.queryForEq(COLUMN_DELETED, false));
     }
 
 
     public SnippetsCollection findDeleted() throws SQLException {
-        return new SnippetsCollection(snippetDao.queryForEq("deleted", true));
+        return new SnippetsCollection(snippetDao.queryForEq(COLUMN_DELETED, true));
     }
 
     public SnippetsDeletions findDeletedIds() throws SQLException {
@@ -48,5 +51,15 @@ public class SnippetsStorage {
             snippetsDeletions.add(snippet.getId());
         }
         return snippetsDeletions;
+    }
+
+    public void deleteNonDirty() throws SQLException {
+        DeleteBuilder<Snippet, String> deleteBuilder = snippetDao.deleteBuilder();
+        deleteBuilder.where().eq(COLUMN_DIRTY, false);
+        deleteBuilder.delete();
+    }
+
+    public Dao<Snippet, String> getSnippetDao() {
+        return snippetDao;
     }
 }
