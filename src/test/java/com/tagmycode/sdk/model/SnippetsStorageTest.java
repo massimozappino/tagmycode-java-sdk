@@ -80,7 +80,7 @@ public class SnippetsStorageTest extends BaseTest {
     @Test
     public void findByLocalIdWithZeroReturnAlwaysNull() throws Exception {
         snippetDao.create(resourceGenerate.aSnippet().setLocalId(0));
-        assertEquals(0, snippetDao.queryForAll().get(0).getLocalId());
+        assertEquals(1, snippetDao.queryForAll().get(0).getLocalId());
         assertNull(snippetsStorage.findByLocalId(0));
     }
 
