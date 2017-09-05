@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - renamed LanguagesCollection and SnippetsCollection
 - rewritten synchronization snippets logic
+
 ### Added
 - LanguagesCollection can be searched by code
 - LanguagesCollection can be searched by file name extension
-- Managed schema version with db drop and create
-- Added "dirty" and "deleted" fields on snippet model
-- Added SnippetStorage to manage SQL snippets operations
+- managed schema version with db drop and create
+- added "dirty" and "deleted" fields on snippet model
+- added SnippetStorage to manage SQL snippets operations
+- added log for API request
 
 ## [1.1.1] - 2017-04-22
 ### Changed
@@ -21,7 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.1.0] - 2017-03-25
 ### Added
-- Models are ready to be used by OrmLite and H2 Database
+- models are ready to be used by OrmLite and H2 Database
 - added CHANGELOG.md file
 - added SaveFilePath class
 - added Property model

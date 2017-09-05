@@ -5,6 +5,7 @@ import com.tagmycode.sdk.exception.TagMyCodeApiException;
 import com.tagmycode.sdk.exception.TagMyCodeConnectionException;
 import com.tagmycode.sdk.exception.TagMyCodeException;
 import com.tagmycode.sdk.exception.TagMyCodeUnauthorizedException;
+import org.apache.log4j.Logger;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.exceptions.OAuthException;
 import org.scribe.model.OAuthRequest;
@@ -20,6 +21,7 @@ public class Client {
     private OauthToken oauthToken;
     private TagMyCodeApi tagmycodeApi;
     private IOauthWallet wallet;
+    public final static Logger logger = Logger.getLogger(Client.class);
 
     public Client(TagMyCodeApi tagmycodeApi, String key, String secret, IOauthWallet wallet) {
         this.tagmycodeApi = tagmycodeApi;
@@ -120,6 +122,8 @@ public class Client {
         OAuthRequest request = createRequestObject(uri, verb, paramList, headers);
 
         this.service.signRequest(oauthToken.getAccessToken(), request);
+
+        logRequest(request);
         return request;
     }
 
@@ -178,5 +182,12 @@ public class Client {
     public void revokeAccess() throws TagMyCodeException {
         setOauthToken(null);
         wallet.deleteOauthToken();
+    }
+
+    private void logRequest(OAuthRequest request) {
+        logger.debug(request.getVerb() + " " + request.getUrl() + "?" + request.getQueryStringParams().asFormUrlEncodedString());
+        logger.debug("\tHEADERS: " + request.getHeaders().entrySet());
+        logger.debug("\tBODY: " + request.getBodyContents());
+        logger.debug("---");
     }
 }
