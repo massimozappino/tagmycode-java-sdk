@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class LanguageCollectionTest extends BaseTest {
@@ -42,7 +41,13 @@ public class LanguageCollectionTest extends BaseTest {
     @Test
     public void testFindByFileName() throws Exception {
         LanguagesCollection languageCollection = resourceGenerate.aLanguageCollection();
+        Language xml = resourceGenerate.aLanguage();
+        xml.setCode("xml");
+        xml.setName("XML");
+        languageCollection.add(xml);
+
         assertEquals("Java", languageCollection.findByFileName("file.java").getName());
+        assertEquals("XML", languageCollection.findByFileName("pom.xml").getName());
         assertNull(languageCollection.findByFileName("file"));
     }
 

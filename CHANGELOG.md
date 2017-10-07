@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - added "dirty" and "deleted" fields on snippet model
 - added SnippetStorage to manage SQL snippets operations
 - added log for API request
+- added DateParser utilities to print datetime with different locales
 
 ## [1.1.1] - 2017-04-22
 ### Changed

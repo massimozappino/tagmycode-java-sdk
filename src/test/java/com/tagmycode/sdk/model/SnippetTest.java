@@ -85,8 +85,8 @@ public class SnippetTest extends ModelAbstractBaseTest {
         assertEquals("A simple description", s.getDescription());
         assertEquals("Java", s.getLanguage().getName());
         assertEquals("tag1 tag2 tag3", s.getTags());
-        Assert.assertEquals(new DateParser().parseDate("2010-11-22T13:11:25+00:00"), s.getCreationDate());
-        assertEquals(new DateParser().parseDate("2010-11-22T13:11:25+00:00"), s.getUpdateDate());
+        Assert.assertEquals(DateParser.parseDate("2010-11-22T13:11:25+00:00"), s.getCreationDate());
+        assertEquals(DateParser.parseDate("2010-11-22T13:11:25+00:00"), s.getUpdateDate());
         assertEquals("https://tagmycode.com/snippet/1", s.getUrl());
     }
 
@@ -118,8 +118,8 @@ public class SnippetTest extends ModelAbstractBaseTest {
                 .setCode("code\r\nsecond line")
                 .setTags("tag1 tag2 tag3")
                 .setDescription("A simple description")
-                .setCreationDate(new DateParser().parseDate("2010-11-22T13:11:25Z"))
-                .setUpdateDate(new DateParser().parseDate("2010-11-22T13:11:25Z"))
+                .setCreationDate(DateParser.parseDate("2010-11-22T13:11:25Z"))
+                .setUpdateDate(DateParser.parseDate("2010-11-22T13:11:25Z"))
                 .setLanguage(resourceGenerate.aLanguage())
                 .setUrl("https://tagmycode.com/snippet/1");
 

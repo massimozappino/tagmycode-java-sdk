@@ -17,7 +17,6 @@ import support.ClientBaseTest;
 import java.io.IOException;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -52,7 +51,7 @@ public class SynchronizeSnippetsTest extends ClientBaseTest {
         Snippet localSnippet = resourceGenerate.aSnippet().setId(0).setTitle("local title").setLocalId(99);
         dirtySnippets.add(localSnippet);
 
-        Date creationDate = new DateParser().parseDate("2017-11-22T13:11:25Z");
+        Date creationDate = DateParser.parseDate("2017-11-22T13:11:25Z");
         doReturn(resourceGenerate.anotherSnippet()
                 .setCreationDate(creationDate))
                 .when(tagMyCode).createSnippet((Snippet) any());
@@ -83,7 +82,7 @@ public class SynchronizeSnippetsTest extends ClientBaseTest {
     public void updateSnippetFromClient() throws Exception {
         tagMyCodeSyncReturns(tagMyCode, new SnippetsCollection(), new SnippetsDeletions());
 
-        Date updateDate = new DateParser().parseDate("2017-11-22T13:11:25Z");
+        Date updateDate = DateParser.parseDate("2017-11-22T13:11:25Z");
         doReturn(resourceGenerate.aSnippet().setTitle("new title")
                 .setUpdateDate(updateDate))
                 .when(tagMyCode).updateSnippet((Snippet) any());

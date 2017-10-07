@@ -53,11 +53,10 @@ abstract public class ModelAbstract implements Comparable<ModelAbstract> {
     protected Object fieldToJson(Date date) {
         Object jsonDate = JSONObject.NULL;
         if (date != null) {
-            jsonDate = new DateParser().toISO8601(date);
+            jsonDate = new DateParser(date).toISO8601();
         }
         return jsonDate;
     }
-
 
     protected String jsonToString(String fieldName) throws JSONException {
         if (getJsonObject().isNull(fieldName)) {
@@ -70,7 +69,7 @@ abstract public class ModelAbstract implements Comparable<ModelAbstract> {
         if (getJsonObject().isNull(fieldName)) {
             return null;
         } else {
-            return new DateParser().parseDate(getJsonObject().getString(fieldName));
+            return DateParser.parseDate(getJsonObject().getString(fieldName));
         }
     }
 
