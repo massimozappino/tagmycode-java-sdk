@@ -34,7 +34,7 @@ public class CrashTest {
         assertEquals("plugin_id", map.get(Crash.APP_ID));
         assertEquals("{\"id\":0,\"username\":\"username\"}", map.get(Crash.USER));
         String[] stackTrace = map.get(Crash.THROWABLE).split("\r\n|\r|\n");
-        assertEquals(32, stackTrace.length);
+        assertTrue(stackTrace.length > 10);
         assertEquals("java.lang.Exception: Error message", stackTrace[0]);
         assertEquals("java.lang.Exception: Error message", stackTrace[0]);
         assertEquals("Error message", map.get(Crash.THROWABLE_MESSAGE));

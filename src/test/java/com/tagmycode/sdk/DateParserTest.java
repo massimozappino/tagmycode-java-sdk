@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 
@@ -29,19 +30,25 @@ public class DateParserTest {
     @Test
     public void toDateLocale() throws ParseException {
         Date date = DateParser.parseDate("2010-11-22T01:11:25+02:00");
-        assertEquals("Monday, November 22, 2010", new DateParser(date).toDateLocale(DateFormat.FULL, Locale.US));
+        DateParser dateParser = new DateParser(date);
+        dateParser.setTimezone(TimeZone.getTimeZone("gmt"));
+        assertEquals("Sunday, November 21, 2010", dateParser.toDateLocale(DateFormat.FULL, Locale.US));
     }
 
     @Test
     public void toTimeLocale() throws ParseException {
         Date date = DateParser.parseDate("2010-11-22T01:11:25+02:00");
-        assertEquals("12:11:25 AM CET", new DateParser(date).toTimeLocale(DateFormat.FULL, Locale.US));
+        DateParser dateParser = new DateParser(date);
+        dateParser.setTimezone(TimeZone.getTimeZone("gmt"));
+        assertEquals("11:11:25 PM GMT", dateParser.toTimeLocale(DateFormat.FULL, Locale.US));
     }
 
     @Test
     public void toDateTimeLocale() throws ParseException {
         Date date = DateParser.parseDate("2010-11-22T01:11:25+02:00");
-        assertEquals("Nov 22, 2010 12:11:25 AM", new DateParser(date).toDateTimeLocale(DateFormat.MEDIUM, DateFormat.MEDIUM, Locale.US));
+        DateParser dateParser = new DateParser(date);
+        dateParser.setTimezone(TimeZone.getTimeZone("gmt"));
+        assertEquals("Nov 21, 2010 11:11:25 PM", dateParser.toDateTimeLocale(DateFormat.MEDIUM, DateFormat.MEDIUM, Locale.US));
     }
 
 }

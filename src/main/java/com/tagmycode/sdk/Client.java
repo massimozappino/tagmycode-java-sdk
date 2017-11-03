@@ -64,7 +64,7 @@ public class Client {
     public void refreshOauthToken() throws TagMyCodeException {
         try {
             setOauthToken(service.getAccessTokenFromRefreshToken(oauthToken.getRefreshToken()));
-        } catch (Exception e) {
+        } catch (OAuthException e) {
             //TODO if network error: throw unauthenticated only if server has a valid error response
             throw new TagMyCodeException("Error fetching refresh token: " + e.getMessage());
         }
