@@ -1,5 +1,7 @@
 package com.tagmycode.sdk.authentication;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.scribe.model.Token;
 
 public class OauthToken implements Comparable<OauthToken> {
@@ -42,5 +44,16 @@ public class OauthToken implements Comparable<OauthToken> {
         }
 
         return compareTo((OauthToken) object) == 0;
+    }
+
+    public String toJson() {
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("access_token", accessToken.getToken());
+            jo.put("refresh_token", refreshToken.getToken());
+        } catch (JSONException ignore) {
+        }
+
+        return jo.toString();
     }
 }
