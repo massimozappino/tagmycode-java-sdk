@@ -63,11 +63,19 @@ public class Client {
 
     public void refreshOauthToken() throws TagMyCodeException {
         try {
-            setOauthToken(service.getAccessTokenFromRefreshToken(oauthToken.getRefreshToken()));
+            fetchAndSetRefreshToken(service.getAccessTokenFromRefreshToken(oauthToken.getRefreshToken()));
         } catch (OAuthException e) {
-            //TODO if network error: throw unauthenticated only if server has a valid error response
-            throw new TagMyCodeException("Error fetching refresh token: " + e.getMessage());
+            String message = "Error fetching refresh token: " + e.getMessage();
+            if (e.getMessage().contains("refresh_token")) {
+                throw new TagMyCodeUnauthorizedException(message);
+            } else {
+                throw new TagMyCodeException(message);
+            }
         }
+    }
+
+    protected void fetchAndSetRefreshToken(OauthToken accessTokenFromRefreshToken) throws TagMyCodeException {
+        setOauthToken(accessTokenFromRefreshToken);
     }
 
     public String getAuthorizationUrl() {
