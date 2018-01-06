@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.0.0] - 2016-06-06
 ### Added
 - added methods to manage TagMyCode API
+
 [1.2.1]: https://github.com/massimozappino/tagmycode-java-sdk/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/massimozappino/tagmycode-java-sdk/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/massimozappino/tagmycode-java-sdk/compare/v1.1.0...v1.1.1
