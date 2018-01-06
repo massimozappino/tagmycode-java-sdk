@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## UNRELEASED
+## [1.2.0] - (2018-01-06)
 ### Added
 - throws TagMyCodeUnauthorizedException if refresh token is not valid
 
