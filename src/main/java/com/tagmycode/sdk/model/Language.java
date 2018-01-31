@@ -5,6 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.tagmycode.sdk.exception.TagMyCodeJsonException;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 @DatabaseTable(tableName = "languages")
 public class Language extends ModelAbstract {
     @DatabaseField(id = true)
@@ -41,8 +42,9 @@ public class Language extends ModelAbstract {
         return id;
     }
 
-    public void setId(int id) {
+    public Language setId(int id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
@@ -53,12 +55,14 @@ public class Language extends ModelAbstract {
         return code;
     }
 
-    public void setName(String name) {
+    public Language setName(String name) {
         this.name = name;
+        return this;
     }
 
-    public void setCode(String code) {
+    public Language setCode(String code) {
         this.code = code;
+        return this;
     }
 
     @Override

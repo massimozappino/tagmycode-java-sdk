@@ -34,6 +34,18 @@ public class ResourceGenerate {
         return new Language(resourceReader.readFile("language2.json"));
     }
 
+    public Language languageJava() {
+        return new Language().setCode("java").setName("Java").setId(1);
+    }
+
+    public Language languagePHP() {
+        return new Language().setCode("php").setName("PHP").setId(3);
+    }
+
+    public Language languageRuby() {
+        return new Language().setCode("ruby").setName("Ruby").setId(38);
+    }
+
     public User aUser() throws IOException, TagMyCodeJsonException {
         return new User(resourceReader.readFile("user.json"));
     }
