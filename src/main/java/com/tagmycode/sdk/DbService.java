@@ -25,11 +25,11 @@ public class DbService {
     private Dao<Property, String> propertyDao;
 
     public DbService(SaveFilePath saveFilePath) {
-        this(saveFilePath.getPath() + File.separator + "db/data");
+        this(saveFilePath.getPath());
     }
 
-    protected DbService(String dbPath) {
-        this.dbPath = dbPath;
+    public DbService(String dbPath) {
+        this.dbPath = dbPath + File.separator + "db/data";
     }
 
     public DbService initialize() throws SQLException {

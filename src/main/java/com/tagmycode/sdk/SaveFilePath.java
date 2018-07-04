@@ -17,6 +17,10 @@ public class SaveFilePath {
         return path;
     }
 
+    public String getPathWith(String filename) {
+        return path + File.separator + filename;
+    }
+
     private void createDirectories(String path) throws IOException {
         File directory = new File(path);
         if (!directory.exists()) {

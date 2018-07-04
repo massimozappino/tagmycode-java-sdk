@@ -156,7 +156,7 @@ public class DbServiceTest extends BaseTest {
     }
 
     @Test
-    public void xxx() throws SQLException, IOException, TagMyCodeJsonException {
+    public void updateSnippetsData() throws SQLException, IOException, TagMyCodeJsonException {
         dbServiceSpy.clearAllTables();
 
         Snippet snippet = resourceGenerate.aSnippet();

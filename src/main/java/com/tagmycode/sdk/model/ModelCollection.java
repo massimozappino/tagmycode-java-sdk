@@ -7,12 +7,10 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
-public class ModelCollection<T extends ModelAbstract> extends Vector<T> {
+public class ModelCollection<T extends ModelAbstract> extends ArrayList<T> {
 
     public ModelCollection() {
-
     }
 
     public ModelCollection(List<T> list) {
@@ -30,5 +28,9 @@ public class ModelCollection<T extends ModelAbstract> extends Vector<T> {
         }
 
         return "[" + StringUtils.join(jsonStringArray, ", ") + "]";
+    }
+
+    public T firstElement() {
+        return get(0);
     }
 }
