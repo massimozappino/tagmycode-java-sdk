@@ -40,7 +40,7 @@ public class DateParserTest {
         Date date = DateParser.parseDate("2010-11-22T01:11:25+02:00");
         DateParser dateParser = new DateParser(date);
         dateParser.setTimezone(TimeZone.getTimeZone("gmt"));
-        assertEquals("11:11:25 PM GMT", dateParser.toTimeLocale(DateFormat.FULL, Locale.US));
+        assertEquals("11:11:25 PM", dateParser.toTimeLocale(DateFormat.MEDIUM, Locale.US));
     }
 
     @Test
