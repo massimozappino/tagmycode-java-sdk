@@ -2,7 +2,6 @@ package com.tagmycode.sdk;
 
 import javax.xml.bind.DatatypeConverter;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -18,7 +17,7 @@ public class DateParser {
         this.timezone = TimeZone.getDefault();
     }
 
-    public static Date parseDate(String dateString) throws ParseException {
+    public static Date parseDate(String dateString) {
         return DatatypeConverter.parseDateTime(dateString).getTime();
     }
 
