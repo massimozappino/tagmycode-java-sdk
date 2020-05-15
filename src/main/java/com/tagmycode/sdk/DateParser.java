@@ -1,8 +1,10 @@
 package com.tagmycode.sdk;
 
-import javax.xml.bind.DatatypeConverter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -18,7 +20,9 @@ public class DateParser {
     }
 
     public static Date parseDate(String dateString) {
-        return DatatypeConverter.parseDateTime(dateString).getTime();
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(dateString);
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(zonedDateTime.toInstant(), ZoneOffset.UTC);
+        return Date.from(localDateTime.atZone(ZoneOffset.UTC).toInstant());
     }
 
     public String toISO8601() {
