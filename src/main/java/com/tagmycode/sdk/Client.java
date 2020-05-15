@@ -5,14 +5,14 @@ import com.tagmycode.sdk.exception.TagMyCodeApiException;
 import com.tagmycode.sdk.exception.TagMyCodeConnectionException;
 import com.tagmycode.sdk.exception.TagMyCodeException;
 import com.tagmycode.sdk.exception.TagMyCodeUnauthorizedException;
-import org.apache.log4j.Logger;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.exceptions.OAuthException;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Verb;
 import org.scribe.model.Verifier;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 public class Client {
@@ -21,7 +21,7 @@ public class Client {
     private OauthToken oauthToken;
     private TagMyCodeApi tagmycodeApi;
     private IOauthWallet wallet;
-    public final static Logger logger = Logger.getLogger(Client.class);
+    public final static Logger logger = LoggerFactory.getLogger(Client.class);
 
     public Client(TagMyCodeApi tagmycodeApi, String key, String secret, IOauthWallet wallet) {
         this.tagmycodeApi = tagmycodeApi;
