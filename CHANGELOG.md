@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+### Fixed
+- fixed java.lang.NoClassDefFoundError: javax/xml/bind/DatatypeConverter
+
+### Changed
+- changed java version from 1.6 to 1.8
+- changed logger (slf4j instead of log4j)
+
 ## [1.2.1] - (2018-01-06)
 ### Added
 - throws TagMyCodeUnauthorizedException if refresh token is not valid
