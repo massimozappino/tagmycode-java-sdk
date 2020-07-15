@@ -1,8 +1,11 @@
 package com.tagmycode.sdk;
 
+import lombok.Getter;
+
 import java.io.File;
 import java.io.IOException;
 
+@Getter
 public class SaveFilePath {
 
     private final String path;
@@ -11,10 +14,6 @@ public class SaveFilePath {
         String basePath = getBasePath();
         createDirectories(basePath);
         path = basePath + File.separator + namespace;
-    }
-
-    public String getPath() {
-        return path;
     }
 
     public String getPathWith(String filename) {

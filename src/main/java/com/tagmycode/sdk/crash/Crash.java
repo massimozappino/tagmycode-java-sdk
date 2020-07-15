@@ -2,6 +2,7 @@ package com.tagmycode.sdk.crash;
 
 import com.tagmycode.sdk.authentication.OauthToken;
 import com.tagmycode.sdk.model.User;
+import lombok.Getter;
 import org.json.JSONException;
 
 import java.io.PrintWriter;
@@ -9,6 +10,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
 public class Crash {
     public static final String OPERATING_SYSTEM = "operating_system";
     public static final String JAVA_VERSION = "java_version";
@@ -51,34 +53,6 @@ public class Crash {
         StringWriter sw = new StringWriter();
         throwable.printStackTrace(new PrintWriter(sw));
         return sw.toString();
-    }
-
-    public String getOperatingSystem() {
-        return operatingSystem;
-    }
-
-    public String getJavaVersion() {
-        return javaVersion;
-    }
-
-    public String getAppVersion() {
-        return appVersion;
-    }
-
-    public Throwable getThrowable() {
-        return throwable;
-    }
-
-    public String getAppId() {
-        return appId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public OauthToken getOauthToken() {
-        return oauthToken;
     }
 
     public Map<String, String> toMap() {

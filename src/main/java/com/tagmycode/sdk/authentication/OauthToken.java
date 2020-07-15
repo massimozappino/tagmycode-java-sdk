@@ -1,9 +1,11 @@
 package com.tagmycode.sdk.authentication;
 
+import lombok.Getter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.scribe.model.Token;
 
+@Getter
 public class OauthToken implements Comparable<OauthToken> {
     private Token accessToken;
     private Token refreshToken;
@@ -11,14 +13,6 @@ public class OauthToken implements Comparable<OauthToken> {
     public OauthToken(String accessToken, String refreshToken) {
         this.accessToken = new Token(accessToken, "");
         this.refreshToken = new Token(refreshToken, "");
-    }
-
-    public Token getAccessToken() {
-        return accessToken;
-    }
-
-    public Token getRefreshToken() {
-        return refreshToken;
     }
 
     @Override

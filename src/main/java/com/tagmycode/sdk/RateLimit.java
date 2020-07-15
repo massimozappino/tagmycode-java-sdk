@@ -1,6 +1,8 @@
 package com.tagmycode.sdk;
 
+import lombok.Getter;
 
+@Getter
 public class RateLimit {
     private final int limit;
     private final int remaining;
@@ -10,17 +12,5 @@ public class RateLimit {
         this.limit = limit;
         this.remaining = remaining;
         this.reset = reset;
-    }
-
-    public int getLimit() {
-        return limit;
-    }
-
-    public int getRemaining() {
-        return remaining;
-    }
-
-    public int getReset() {
-        return reset;
     }
 }
