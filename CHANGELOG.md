@@ -4,9 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [1.3.0] - (2020-07-19)
 ### Added
 - added [Lombok](https://projectlombok.org/) library
+
 ### Fixed
 - fixed java.lang.NoClassDefFoundError: javax/xml/bind/DatatypeConverter
 
