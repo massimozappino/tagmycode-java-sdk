@@ -13,6 +13,7 @@ import org.scribe.model.Verb;
 import org.scribe.model.Verifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 
 public class Client {
@@ -62,8 +63,9 @@ public class Client {
         try {
             fetchAndSetRefreshToken(service.getAccessTokenFromRefreshToken(oauthToken.getRefreshToken()));
         } catch (OAuthException e) {
-            String message = "Error fetching refresh token: " + e.getMessage();
-            if (e.getMessage().contains("refresh_token")) {
+            String exceptionMessage = e.getMessage();
+            String message = "Error fetching refresh token: " + exceptionMessage;
+            if (responseIsUnauthorized(exceptionMessage)) {
                 throw new TagMyCodeUnauthorizedException(message);
             } else {
                 throw new TagMyCodeException(message);
@@ -188,6 +190,10 @@ public class Client {
     public void revokeAccess() throws TagMyCodeException {
         setOauthToken(null);
         wallet.deleteOauthToken();
+    }
+
+    public boolean responseIsUnauthorized(String responseMessage) {
+        return responseMessage.contains("refresh_token") || responseMessage.contains("invalid_grant");
     }
 
     private void logRequest(OAuthRequest request) {

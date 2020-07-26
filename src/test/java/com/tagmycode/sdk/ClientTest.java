@@ -154,7 +154,6 @@ public class ClientTest extends ClientBaseTest {
     @Test
     public void refreshOauthTokenReceiveNewAccessToken() throws Exception {
         stubFor(post(urlMatching("/oauth2/token.*"))
-                .withRequestBody((matching(".*refresh_token.*")))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/plain")
@@ -168,22 +167,24 @@ public class ClientTest extends ClientBaseTest {
     }
 
     @Test
-    public void refreshOauthTokenWithInvalidTokenThrowsException() throws Exception {
+    public void failedRefreshTokenThrownTagMyCodeUnauthorizedException() {
         stubFor(post(urlMatching("/oauth2/token.*"))
-                .withRequestBody((matching(".*refresh_token.*")))
                 .willReturn(aResponse()
                         .withStatus(401)
                         .withHeader("Content-Type", "text/plain")
                         .withBody("{\"error\":\"invalid_grant\",\"error_description\":\"Invalid refresh token\"}"
                         )));
-        assertEquals(new OauthToken("xxx", "yyy"), client.getOauthToken());
+        Client spyClient = spy(client);
+        assertEquals(new OauthToken("xxx", "yyy"), spyClient.getOauthToken());
 
         try {
-            client.refreshOauthToken();
+            spyClient.refreshOauthToken();
             fail("Expected exception");
-        } catch (TagMyCodeException ignore) {
+        } catch (TagMyCodeException e) {
+            assertTrue(e instanceof TagMyCodeUnauthorizedException);
         }
-        assertEquals(new OauthToken("xxx", "yyy"), client.getOauthToken());
+        assertEquals(new OauthToken("xxx", "yyy"), spyClient.getOauthToken());
+        verify(spyClient, times(1)).responseIsUnauthorized(anyString());
     }
 
     @Test
@@ -196,7 +197,6 @@ public class ClientTest extends ClientBaseTest {
                         )));
 
         stubFor(post(urlMatching("/oauth2/token.*"))
-                .withRequestBody((matching(".*refresh_token.*")))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/plain")
@@ -213,26 +213,12 @@ public class ClientTest extends ClientBaseTest {
     }
 
     @Test
-    public void failedRefreshTokenThrownTagMyCodeUnauthorizedException() throws TagMyCodeException {
-        stubFor(get(urlMatching("/account.*"))
-                .willReturn(aResponse()
-                        .withStatus(401)
-                        .withHeader("Content-Type", "text/plain")
-                        .withBody(""
-                        )));
+    public void testResponseIsUnauthorized() {
+        assertTrue(client.responseIsUnauthorized("{\"error\":\"invalid_grant\",\"error_description\":\"Invalid refresh token\"}"));
+        assertTrue(client.responseIsUnauthorized("message contains refresh_token "));
 
-        stubFor(post(urlMatching("/oauth2/token.*"))
-                .withRequestBody((matching(".*refresh_token.*")))
-                .willReturn(aResponse()
-                        .withStatus(401)
-                        .withHeader("Content-Type", "text/plain")
-                        .withBody("{}"
-                        )));
-        try {
-            new TagMyCode(client).fetchAccount();
-            fail("Expected exception");
-        } catch (TagMyCodeException ignored) {
-        }
+        assertFalse(client.responseIsUnauthorized(""));
+        assertFalse(client.responseIsUnauthorized("{}"));
     }
 
     @Test

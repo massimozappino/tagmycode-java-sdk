@@ -12,7 +12,7 @@ import java.util.TimeZone;
 public class DateParser {
 
     private TimeZone timezone;
-    private Date date;
+    private final Date date;
 
     public DateParser(Date date) {
         this.date = date;
