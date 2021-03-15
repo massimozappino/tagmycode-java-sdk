@@ -19,7 +19,7 @@ public class TagMyCodeApiStub extends TagMyCodeApi {
     }
 
     @Override
-    public boolean isSsl() {
+    public boolean isDevelopment() {
         return false;
     }
 }

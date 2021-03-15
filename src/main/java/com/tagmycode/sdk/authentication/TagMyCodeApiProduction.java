@@ -6,4 +6,9 @@ public class TagMyCodeApiProduction extends TagMyCodeApi {
     public String getDomain() {
         return "tagmycode.com";
     }
+
+    @Override
+    public boolean isDevelopment() {
+        return false;
+    }
 }

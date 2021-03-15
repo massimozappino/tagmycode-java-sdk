@@ -27,11 +27,14 @@ public class Client {
     public Client(TagMyCodeApi tagmycodeApi, String key, String secret, IOauthWallet wallet) {
         this.tagmycodeApi = tagmycodeApi;
         this.wallet = wallet;
-
+        if (tagmycodeApi.isDevelopment()) {
+            Ssl.disableSslVerification();
+        }
         this.service = (TagMyCodeServiceImpl) new ServiceBuilder()
                 .provider(tagmycodeApi)
                 .apiKey(key)
                 .apiSecret(secret)
+                .callback("oob")
                 .build();
         endpointUrl = tagmycodeApi.getEndpointUrl();
         // TODO remove try/catch
