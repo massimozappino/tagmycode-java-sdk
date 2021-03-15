@@ -22,9 +22,7 @@ public abstract class TagMyCodeApi extends DefaultApi20 {
         return "https://" + getDomain();
     }
 
-    public boolean isSsl() {
-        return true;
-    }
+    public abstract boolean isDevelopment();
 
     @Override
     public String getAccessTokenEndpoint() {
