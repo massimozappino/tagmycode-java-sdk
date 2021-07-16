@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/massimozappino/tagmycode-java-sdk.svg?branch=master)](https://travis-ci.org/massimozappino/tagmycode-java-sdk)
+[![Build Status](https://travis-ci.com/massimozappino/tagmycode-java-sdk.svg?branch=master)](https://travis-ci.com/massimozappino/tagmycode-java-sdk)
 [![Coverage Status](https://coveralls.io/repos/github/massimozappino/tagmycode-java-sdk/badge.svg)](https://coveralls.io/github/massimozappino/tagmycode-java-sdk)
 
 # TagMyCode Java SDK
