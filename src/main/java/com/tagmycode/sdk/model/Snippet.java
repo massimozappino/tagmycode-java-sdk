@@ -12,7 +12,7 @@ import java.util.Date;
 
 @DatabaseTable(tableName = "snippets")
 public class Snippet extends ModelAbstract {
-    @DatabaseField(allowGeneratedIdInsert = true, generatedId = true)
+    @DatabaseField(generatedId = true)
     private int localId;
     @DatabaseField
     private int id;

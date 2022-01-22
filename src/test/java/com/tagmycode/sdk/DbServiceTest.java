@@ -28,7 +28,7 @@ public class DbServiceTest extends BaseTest {
     }
 
     @After
-    public void shutDownDb() throws IOException {
+    public void shutDownDb() throws Exception {
         dbServiceSpy.close();
     }
 
@@ -118,7 +118,7 @@ public class DbServiceTest extends BaseTest {
         try {
             dbServiceSpy.languageDao().countOf();
             fail("Expected exception");
-        } catch (JdbcSQLException ignore) {
+        } catch (Exception ignore) {
         }
         for (Class aClass : dbServiceSpy.getTableClasses()) {
             verify(dbServiceSpy, times(2)).dropTable(aClass);

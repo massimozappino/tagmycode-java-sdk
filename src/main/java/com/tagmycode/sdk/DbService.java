@@ -108,7 +108,7 @@ public class DbService {
         return DaoManager.createDao(jdbcConnectionSource, aClass);
     }
 
-    public void close() throws IOException {
+    public void close() throws Exception {
         if (jdbcConnectionSource != null) {
             jdbcConnectionSource.close();
         }
