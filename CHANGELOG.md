@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.2] - (2022-04-28)
+### Changed
+- moved from slf4j to log4j
+- updated dependencies
+
 ## [1.3.1] - (2020-07-26)
 ### Fixed
 - force logout if refresh token is not valid
@@ -55,6 +60,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - added methods to manage TagMyCode API
 
+[1.3.2]: https://github.com/massimozappino/tagmycode-java-sdk/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/massimozappino/tagmycode-java-sdk/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/massimozappino/tagmycode-java-sdk/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/massimozappino/tagmycode-java-sdk/compare/v1.2.0...v1.2.1
